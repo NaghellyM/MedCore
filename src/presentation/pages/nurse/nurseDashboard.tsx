@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NursePageContent } from './page/nursePage';
-import NurseHeader from "./components/nurseheader";
 import { NurseSidebar } from './components/nurseSidebar';
+import UserHeader from '../../components/globals/header';
 import { SidebarProvider } from "../../components/ui/sidebar";
 
 export function NurseDashboard() {
@@ -9,7 +9,7 @@ export function NurseDashboard() {
 
     return (
         <>
-            <NurseHeader />
+            <UserHeader showSearch={true} />
             <SidebarProvider>
                 <div className="flex pt-[80px] items-start gap-4">
                     <div className="md:hidden">

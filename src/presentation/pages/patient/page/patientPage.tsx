@@ -3,59 +3,67 @@ import { ButtonPDF, ButtonViewDetails } from "../../../components/globals/button
 
 export function PatientPageContent() {
     return (
-        <div className="">
-            <div className="p-8 bg-white max-w-lg mx-auto ">
-                <div className="flex-1 max-w-md mx-4 hidden md:flex justify-center">
-                    <input
-                        type="text"
-                        placeholder="Electrocardiogram, Análisis de sangre..."
-                        className="w-full border border-slate-300 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-cuidarte-primary"
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
-                        <Search />
-                    </div>
-                    <div className="ml-4">
-                        <select className="border border-slate-300 rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-cuidarte-primary">
+        <div className="w-full">
+            <div className="mx-auto max-w-7xl">
+                <div className="bg-white rounded-xl p-3 sm:p-4">
+                    <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-center">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                            <input
+                                type="text"
+                                placeholder="Electrocardiograma, Análisis de sangre..."
+                                className="w-full border border-slate-300 rounded-lg py-2.5 pl-10 pr-3 focus:outline-none focus:ring-2 focus:ring-cuidarte-primary"
+                            />
+                        </div>
+                        <select className="w-full sm:w-44 border border-slate-300 rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-cuidarte-primary">
                             <option value="last_24_hours">Últimas 24 horas</option>
                             <option value="last_week">Última semana</option>
                             <option value="last_month">Últimos 30 días</option>
                         </select>
                     </div>
                 </div>
+            </div>
 
-                <div className="mt-8">
-                    <div className="space-y-4">
-                        <div className="p-4 border rounded-lg shadow-sm">
-                            <h3 className="text-lg font-semibold">
-                                Examen de Sangre - 01/09/2023
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                                Resultados: Todo dentro de los parámetros normales.
-                            </p>
+            <div className="mx-auto max-w-7xl mt-6">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    <article className="p-4 sm:p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <h3 className="text-base sm:text-lg font-semibold">
+                            Examen de Sangre - 01/09/2023
+                        </h3>
+                        <p className="mt-1 text-sm text-slate-600">
+                            Resultados: Todo dentro de los parámetros normales.
+                        </p>
+                        <div className="mt-4 flex flex-wrap justify-center items-center gap-2">
                             <ButtonViewDetails />
                             <ButtonPDF />
                         </div>
-                        <div className="p-4 border rounded-lg shadow-sm">
-                            <h3 className="text-lg font-semibold">
-                                Radiografía de Tórax - 15/08/2023
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                                Resultados: No se observan anomalías.
-                            </p>
+                    </article>
+
+                    <article className="p-4 sm:p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <h3 className="text-base sm:text-lg font-semibold">
+                            Radiografía de Tórax - 15/08/2023
+                        </h3>
+                        <p className="mt-1 text-sm text-slate-600">
+                            Resultados: No se observan anomalías.
+                        </p>
+                        <div className="mt-4 flex flex-wrap justify-center items-center gap-2">
                             <ButtonViewDetails />
                             <ButtonPDF />
                         </div>
-                        <div className="p-4 border rounded-lg shadow-sm">
-                            <h3 className="text-lg font-semibold">
-                                Análisis de Orina - 30/07/2023
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                                Resultados: Leve presencia de proteínas.
-                            </p>
+                    </article>
+
+                    <article className="p-4 sm:p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                        <h3 className="text-base sm:text-lg font-semibold">
+                            Análisis de Orina - 30/07/2023
+                        </h3>
+                        <p className="mt-1 text-sm text-slate-600">
+                            Resultados: Leve presencia de proteínas.
+                        </p>
+                        <div className="mt-4 flex flex-wrap justify-center items-center gap-2">
                             <ButtonViewDetails />
                             <ButtonPDF />
                         </div>
-                    </div>
+                    </article>
                 </div>
             </div>
         </div>

@@ -5,8 +5,11 @@ import { Avatar } from "../ui/avatar"
 import { getCurrentUser } from "../../../core/services/authService"
 import { useAuth } from "../../../core/context/authContext"
 
+type UserHeaderProps = {
+    showSearch?: boolean;
+}
 
-export default function UserHeader() {
+export default function UserHeader({ showSearch = true }: UserHeaderProps) {
     const user = getCurrentUser();
     const { logoutUser } = useAuth();
     return (
@@ -23,6 +26,7 @@ export default function UserHeader() {
                 />
             </div>
 
+            {showSearch && (
             <div className="flex-1 max-w-md mx-4 relative hidden md:flex justify-center">
                 <input
                     type="text"
@@ -33,6 +37,7 @@ export default function UserHeader() {
                     <Search />
                 </div>
             </div>
+            )}
 
             <div className="flex items-center gap-3 flex-shrink-0">
                 <Avatar className="w-10 h-10">

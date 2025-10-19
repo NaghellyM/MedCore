@@ -1,40 +1,39 @@
 import { useState } from "react";
-import AdminHeader from "./components/adminHeader";
 import { AdminSidebar } from "./components/adminSidebar";
 import { AdminRegisterUser } from "./pages/admiRegisterUser";
 import { AdminRegisterCSV } from "./pages/admiRegisterCSV";
 import { SidebarProvider } from "../../components/ui/sidebar";
+import UserHeader from "../../components/globals/header";
 
 export function AdminDashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
         <>
-            <AdminHeader />
+            <UserHeader showSearch={true} />
+
             <SidebarProvider>
                 <div className="flex pt-[80px]">
                     <div className="md:hidden">
                         <button
                             onClick={() => setSidebarOpen(!sidebarOpen)}
                             className="p-4"
+                            aria-label="Abrir menú lateral"
                         >
                             <span className="text-2xl">☰</span>
                         </button>
                     </div>
-                    <div
-                        className={`md:block w-64 ${sidebarOpen ? "block" : "hidden"
-                            } md:block`}
-                    >
+                    <div className={`${sidebarOpen ? "block" : "hidden"} md:block md:w-64 shrink-0`}>
                         <AdminSidebar />
                     </div>
-                    <main className="flex-1 p-4 flex justify-center items-center">
-                        <div className="flex w-full max-w-screen-lg justify-between">
-                            <div className="w-full max-w-md mx-2">
+                    <main className="flex-1 p-4 sm:p-6 lg:p-8 flex justify-center">
+                        <div className="inline-flex w-auto max-w-full flex-col lg:flex-row items-stretch gap-6 lg:gap-8 border rounded-lg bg-white shadow p-4 sm:p-6">
+                            <section className="w-full max-w-md mx-auto">
                                 <AdminRegisterCSV />
-                            </div>
-                            <div className="w-full max-w-md mx-2">
+                            </section>
+                            <section className="w-full max-w-md mx-auto">
                                 <AdminRegisterUser />
-                            </div>
+                            </section>
                         </div>
                     </main>
                 </div>
