@@ -16,7 +16,11 @@ and medical analytics.
 
 - [![Vite][Vite-logo]][Vite-url] - Vite is a build tool that aims to provide a faster and leaner development experience for modern web projects.
 - [![React][React-logo]][React-url] - React is a JavaScript library for building user interfaces.
+- [![Lucide][Lucide-logo]][Lucide-url] - Lucide is a library of simply beautiful open source icons.
+- [![Shadcn UI][shadcn-logo]][shadcn-url] - Shadcn UI is a collection of components designed for building user interfaces with React.
+- [![Radix UI][Radix-logo]][Radix-url] - Radix UI is a library of unstyled, accessible components for building high-quality design systems and web applications.
 - [![Typescript][Typescript-logo]][Typescript-url] - TypeScript is a strongly typed programming language that builds on JavaScript, giving you better tooling at any scale.
+- [![React Router][ReactRouter-logo]][ReactRouter-url] - React Router is a collection of navigational components that compose declaratively with your application.
 - [![TailwindCSS][TailwindCSS-logo]][TailwindCSS-url] - Tailwind CSS is a utility-first CSS framework for rapidly building custom user interfaces.
 - [![React Hook Form][ReactHookForm-logo]][ReactHookForm-url] - React Hook Form is a library for managing form state and validation in React applications.
 
@@ -30,13 +34,21 @@ and medical analytics.
 [Vite-url]: https://vitejs.dev/
 [ReactHookForm-logo]: https://img.shields.io/badge/React_Hook_Form-EC5990?style=for-the-badge&logo=react-hook-form&logoColor=white
 [ReactHookForm-url]: https://react-hook-form.com/
+[shadcn-logo]: https://img.shields.io/badge/shadcn_UI-000000?style=for-the-badge&logo=shadcn-ui&logoColor=white
+[shadcn-url]: https://ui.shadcn.com/
+[Radix-logo]: https://img.shields.io/badge/Radix_UI-000000?style=for-the-badge&logo=radix-ui&logoColor=white
+[Radix-url]: https://www.radix-ui.com/
+[Lucide-logo]: https://img.shields.io/badge/Lucide-000000?style=for-the-badge&logo=lucide
+[Lucide-url]: https://lucide.dev/
+[ReactRouter-logo]: https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white
+[ReactRouter-url]: https://reactrouter.com/
 
 ## Run Locally
 
 Clone the project
 
 ```bash
-  git clone https://github.com/NaghellyM/MedCore-frontend.git 
+  git clone https://github.com/NaghellyM/MedCore-frontend.git
 ```
 
 Go to the project directory
@@ -56,7 +68,6 @@ Start the server
 ```bash
   npm run dev
 ```
-
 
 ## 🚀 About Development Team
 
