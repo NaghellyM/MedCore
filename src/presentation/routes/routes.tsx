@@ -9,6 +9,8 @@ import { DoctorDashboard } from '../pages/doctor/doctorDashboard';
 import { PatientDashboard } from '../pages/patient/patientDashboard';
 import { AdminRegisterCSV } from '../pages/admin/pages/admiRegisterCSV';
 import { AdminRegisterUser } from '../pages/admin/pages/admiRegisterUser';
+import DoctorsList  from '../pages/admin/pages/DoctorsList';
+import NursesList  from '../pages/admin/pages/NurseList';
 
 const router = createBrowserRouter([
     {
@@ -46,6 +48,14 @@ const router = createBrowserRouter([
             {
                 path: '/admin/registerCSV',
                 element: <AdminRegisterCSV />,
+            },
+            {
+                path: '/admin/doctorsList',
+                element: <DoctorsList />,
+            },
+            {
+                path: '/admin/nursesList',
+                element: <NursesList />,
             },
             {
                 path: '*',
