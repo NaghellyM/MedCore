@@ -9,7 +9,8 @@ import { DoctorDashboard } from '../pages/doctor/doctorDashboard';
 import { PatientDashboard } from '../pages/patient/patientDashboard';
 import { AdminRegisterCSV } from '../pages/admin/pages/admiRegisterCSV';
 import { AdminRegisterUser } from '../pages/admin/pages/admiRegisterUser';
-
+import MedicalHistoryForm from '../pages/medical/MedicalHistoryForm';
+import type { EncounterPayload } from '../../core/types/medical';
 const router = createBrowserRouter([
     {
         path: '/',
@@ -50,9 +51,17 @@ const router = createBrowserRouter([
             {
                 path: '*',
                 element: <NotFoundPage />,
+            },
+            {
+                path: '/medicalHistory',
+                element: <MedicalHistoryForm onSubmit={handleSubmit} />,
             }
         ]
     }
 ]);
 
 export default router;
+function handleSubmit(_payload: EncounterPayload): void | Promise<void> {
+    throw new Error('Function not implemented.');
+}
+

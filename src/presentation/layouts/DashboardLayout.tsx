@@ -12,7 +12,6 @@ export function DashboardLayout({
     showSearch = true,
     headerHeightClass = "pt-[80px]",
     contentMaxWidthClass = "max-w-7xl",
-    mainClassName = "",
     sidebarContentClassName = "",
     variant = "inset",
     collapsible = "offcanvas",
@@ -32,21 +31,16 @@ export function DashboardLayout({
 
     return (
         <SidebarProvider defaultOpen={!isCompact}>
-            {/* Header */}
             <div className="sticky top-0 z-50">
                 <div className="relative">
                     <UserHeader showSearch={showSearch} />
-                    <div className="absolute left-2 top-1/2 -translate-y-1/2">
-                        <SidebarTrigger className="mr-2" />
-                    </div>
                 </div>
             </div>
-
 
             <div className={cn(headerHeightClass, "md:px-2")} style={{ ['--header-h' as any]: '80px' }}>
                 <Sidebar
                     side="left"
-                    variant={variant}
+                        variant={variant}
                     collapsible={collapsible}
                     className="
                     data-[mobile=true]:top-[var(--header-h)]
@@ -55,25 +49,13 @@ export function DashboardLayout({
                     data-[mobile=true]:border-t-0
                     "
                 >
-
                     <SidebarContent className={cn("", sidebarContentClassName)}>
                         {sidebar}
                     </SidebarContent>
                 </Sidebar>
 
-                {/* 👇 el Inset reacciona al estado del peer */}
-                <SidebarInset
-                    className={cn(
-                        "relative flex w-full flex-1 flex-col ",
-                        // cuando el sidebar está expandido en md+, reserva su ancho
-                        "md:peer-data-[state=expanded]:pl-[--sidebar-width]",
-                        // opcional: cuando está colapsado, deja un rail mini (ajusta si usas 'icon')
-                        "md:peer-data-[state=collapsed]:pl-[--sidebar-width-icon]",
-                        // si usas floating, quita el padding:
-                        variant === "floating" && "md:pl-0",
-                        mainClassName
-                    )}
-                >
+                <SidebarInset >
+                    <SidebarTrigger className="" />
                     <div className={cn("mx-auto w-full px-4", contentMaxWidthClass)}>
                         {children}
                     </div>

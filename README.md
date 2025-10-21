@@ -2,7 +2,7 @@
 
 <div align="center">
 <p>
-  <img width="300px" src="./src/assets/images/Cuidarte_vive_al_100.png" alt="Logo" />
+  <img width="300px" src="./public/logoCuidarte.png" alt="Logo" />
 </p>
 </div>
 
