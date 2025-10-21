@@ -12,7 +12,6 @@ import { AdminRegisterUser } from '../pages/admin/pages/admiRegisterUser';
 import MedicalHistoryForm from '../pages/medical/components/form/medicalHistoryForm';
 import type { EncounterPayload } from '../../core/types/medical';
 import Page from '../pages/medical/page';
-import { AppSidebar } from '../pages/app-sidebar';
 const router = createBrowserRouter([
     {
         path: '/',
@@ -62,10 +61,6 @@ const router = createBrowserRouter([
                 path:'/medicalHistory/view',
                 element: <Page />,
             },
-            {
-                path: '/sidebar',
-                element: <AppSidebar />
-            }
         ]
     }
 ]);
