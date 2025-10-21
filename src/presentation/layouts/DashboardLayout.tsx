@@ -47,6 +47,7 @@ export function DashboardLayout({
                     data-[mobile=true]:h-[calc(100vh-var(--header-h))]
                     data-[mobile=true]:rounded-t-none
                     data-[mobile=true]:border-t-0
+                    print:hidden
                     "
                 >
                     <SidebarContent className={cn("", sidebarContentClassName)}>
@@ -55,7 +56,6 @@ export function DashboardLayout({
                 </Sidebar>
 
                 <SidebarInset >
-                    <SidebarTrigger className="" />
                     <div className={cn("mx-auto w-full px-4", contentMaxWidthClass)}>
                         {children}
                     </div>

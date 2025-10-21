@@ -6,6 +6,21 @@ export interface Allergy { substance: string; reaction: string; severity: string
 export interface Medication { drug: string; dose: string; route: string; frequency: string; start_date?: string }
 export interface Diagnosis { code?: string; description: string; type: DiagnosisType }
 export interface OrderItem { type: OrderType; description: string; status?: OrderStatus }
+export type PrescriptionItem = {
+    drug: string;
+    dose: string;
+    route: string;
+    frequency: string;
+    start_date?: string; // <-- make it optional
+    // Add other fields as needed
+};
+
+export type DiagnosisItem = {
+    code: string;
+    description: string;
+    date: string; // Add this line
+    // other fields...
+};
 
 export interface PatientBasic {
     document_type: string
@@ -29,8 +44,11 @@ export interface Vitals {
 }
 
 export interface EncounterPayload {
+    allergies: any;
     patient: PatientBasic
     encounter: {
+        allergies: any;
+        modeTelemedicine: any;
         date_time: string
         location?: string | null
         mode: "teleconsulta" | "presencial"

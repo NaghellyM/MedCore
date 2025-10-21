@@ -1,7 +1,8 @@
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "../../../components/ui/field"
-import { Input } from "../../../components/ui/input"
-import { Button } from "../../../components/ui/button"
-import type { Diagnosis } from "../../../../core/types/medical"
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "../../../../../components/ui/field"
+import { Input } from "../../../../../components/ui/input"
+import { Button } from "../../../../../components/ui/button"
+import type { Diagnosis} from "../../../../../../core/types/medical"
+
 
 type Props = {
     diagnoses: Diagnosis[]

@@ -14,7 +14,7 @@ export default function UserHeader({ showSearch = true }: UserHeaderProps) {
     const { logoutUser } = useAuth();
     return (
         <header
-            className="fixed top-0 left-0 right-0 w-full bg-white shadow-md px-6 py-3 flex items-center justify-between"
+            className="fixed top-0 left-0 right-0 w-full bg-white shadow-md px-6 py-3 flex items-center justify-between print:hidden"
             style={{ "--header-height": "64px" } as React.CSSProperties}
         >
 

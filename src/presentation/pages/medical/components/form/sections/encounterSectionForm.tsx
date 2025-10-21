@@ -1,6 +1,7 @@
-import { Field, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, FieldError } from "../../../components/ui/field"
-import { Input } from "../../../components/ui/input"
-import { Switch } from "../../../components/ui/switch"
+import { Field, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet, FieldError } from "../../../../../components/ui/field"
+import { Input } from "../../../../../components/ui/input"
+import { Switch } from "../../../../../components/ui/switch"
+
 
 type Props = {
     encounter: any
@@ -11,7 +12,7 @@ type Props = {
 export default function EncounterSection({ encounter, setEncounter, errors }: Props) {
     return (
         <FieldSet>
-            <FieldLegend>Datos consulta</FieldLegend>
+            <FieldLegend>Datos de la consulta</FieldLegend>
             <FieldGroup>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Field>

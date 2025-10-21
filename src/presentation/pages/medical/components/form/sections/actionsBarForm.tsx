@@ -1,5 +1,5 @@
-import { Field, FieldGroup, FieldSet } from "../../../components/ui/field"
-import { Button } from "../../../components/ui/button"
+import { Field, FieldGroup, FieldSet } from "../../../../../components/ui/field"
+import { Button } from "../../../../../components/ui/button"
 
 type Props = { submitting?: boolean }
 

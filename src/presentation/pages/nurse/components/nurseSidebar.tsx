@@ -11,7 +11,7 @@ import {
     LayoutGrid,
 } from "lucide-react";
 
-import { Sidebar, SidebarContent, SidebarMenuButton } from "../../../components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarMenuButton, SidebarTrigger } from "../../../components/ui/sidebar";
 import { SidebarGroupComponent } from "../../../components/globals/sidebar/SidebarGroup";
 
 const patientsItems = [
@@ -71,6 +71,7 @@ const profileItems = [
 export function NurseSidebar() {
     return (
         <Sidebar className="ml-3 mb-3 self-start w-fit min-w-[14rem] max-w-[18rem] h-auto border border-white rounded-xl shadow-sm">
+
             <SidebarContent
                 className="mt-40 bg-white rounded-xl border
                 border-cuidarte-tertiary shadow-sm

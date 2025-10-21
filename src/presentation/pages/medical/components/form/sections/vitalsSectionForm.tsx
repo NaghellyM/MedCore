@@ -1,6 +1,6 @@
-import { Field, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "../../../components/ui/field"
-import { Input } from "../../../components/ui/input"
-import type { Vitals } from "../../../../core/types/medical"
+import { Field, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "../../../../../components/ui/field"
+import { Input } from "../../../../../components/ui/input"
+import type { Vitals } from "../../../../../../core/types/medical"
 
 type Props = { vitals: Vitals; setVitals: (v: Vitals) => void }
 

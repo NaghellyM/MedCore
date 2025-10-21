@@ -1,7 +1,7 @@
 import {
     Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet,
-} from "../../../components/ui/field"
-import { Input } from "../../../components/ui/input"
+} from "../../../../../components/ui/field"
+import { Input } from "../../../../../components/ui/input"
 
 type Props = {
     patient: any
