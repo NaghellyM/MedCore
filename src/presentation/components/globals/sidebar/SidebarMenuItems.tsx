@@ -2,6 +2,7 @@ import { SidebarMenuItem, SidebarMenuButton } from "../../ui/sidebar";
 
 export function SidebarMenuItems({ items }: any) {
     return (
+        
         <>
             {items.map((item: any) => (
                 <SidebarMenuItem key={item.title} className="list-none">

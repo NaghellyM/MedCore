@@ -52,7 +52,7 @@ export function DashboardLayout({
                     </SidebarContent>
                 </Sidebar>
                 <SidebarInset >
-                    <SidebarTrigger className="flex justify-start pt-4 m-4" />
+                    <SidebarTrigger className="flex justify-start pt-10 m-4 md:hidden" />
                     <div className={cn("mx-auto w-full px-4", contentMaxWidthClass)}>
                         {children}
                     </div>
