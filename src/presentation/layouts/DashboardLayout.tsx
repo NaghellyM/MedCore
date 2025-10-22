@@ -43,10 +43,6 @@ export function DashboardLayout({
                     variant={variant}
                     collapsible="icon"
                     className="
-                    data-[mobile=true]:top-[var(--header-h)]
-                    data-[mobile=true]:h-[calc(100vh-var(--header-h))]
-                    data-[mobile=true]:rounded-t-none
-                    data-[mobile=true]:border-t-0
                     print:hidden
                     "
                 >
