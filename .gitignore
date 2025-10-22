@@ -2,7 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,node,windows,linux,venv,dotenv,visualstudiocode,macos
 
 .vscode/
-
+.vscode/settings.json
+settings.json
 ### dotenv ###
 .env
 
