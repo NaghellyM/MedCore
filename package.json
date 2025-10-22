@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest -uw"
+    "test": "vitest -uw",
+    "docker:build": "docker compose build",
+    "docker:run": "docker compose up -d --remove-orphans"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
