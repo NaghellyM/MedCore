@@ -27,16 +27,16 @@ export default function UserHeader({ showSearch = true }: UserHeaderProps) {
             </div>
 
             {showSearch && (
-            <div className="flex-1 max-w-md mx-4 relative hidden md:flex justify-center">
-                <input
-                    type="text"
-                    placeholder="Buscar..."
-                    className="w-full border border-slate-300 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-cuidarte-primary"
-                />
-                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
-                    <Search />
+                <div className="flex-1 max-w-md mx-4 relative hidden md:flex justify-center">
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        className="w-full border border-slate-300 rounded-md py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-cuidarte-primary"
+                    />
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
+                        <Search />
+                    </div>
                 </div>
-            </div>
             )}
 
             <div className="flex items-center gap-3 flex-shrink-0">

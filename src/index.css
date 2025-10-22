@@ -16,8 +16,8 @@
   }
 
   .dark {
-    --sidebar-background: #647fbc;
+    --sidebar-background: #ffffff;
     --sidebar-foreground: #ffffff;
-    --sidebar-border: rgba(164, 204, 217, 0.1);
+    --sidebar-border: rgba(255, 255, 255, 0.1);
   }
 }

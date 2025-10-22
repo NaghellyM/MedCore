@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
-    SidebarProvider, Sidebar, SidebarInset, SidebarContent, SidebarTrigger
+    SidebarProvider, Sidebar, SidebarInset, SidebarContent,
+    SidebarTrigger,
 } from "../components/ui/sidebar";
 import UserHeader from "../components/globals/header";
 import { useIsCompact } from "../hooks/useBreakpoint";
@@ -14,7 +15,6 @@ export function DashboardLayout({
     contentMaxWidthClass = "max-w-7xl",
     sidebarContentClassName = "",
     variant = "inset",
-    collapsible = "offcanvas",
 }: {
     sidebar: React.ReactNode;
     children: React.ReactNode;
@@ -40,8 +40,8 @@ export function DashboardLayout({
             <div className={cn(headerHeightClass, "md:px-2")} style={{ ['--header-h' as any]: '80px' }}>
                 <Sidebar
                     side="left"
-                        variant={variant}
-                    collapsible={collapsible}
+                    variant={variant}
+                    collapsible="icon"
                     className="
                     data-[mobile=true]:top-[var(--header-h)]
                     data-[mobile=true]:h-[calc(100vh-var(--header-h))]
@@ -50,12 +50,13 @@ export function DashboardLayout({
                     print:hidden
                     "
                 >
+
                     <SidebarContent className={cn("", sidebarContentClassName)}>
                         {sidebar}
                     </SidebarContent>
                 </Sidebar>
-
                 <SidebarInset >
+                    <SidebarTrigger className="flex justify-start pt-4 m-4" />
                     <div className={cn("mx-auto w-full px-4", contentMaxWidthClass)}>
                         {children}
                     </div>
