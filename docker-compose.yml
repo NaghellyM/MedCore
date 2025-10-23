@@ -1,0 +1,27 @@
+services:
+  api:
+    image: ms-frontend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - VITE_API_MS_SECURITY="http://ms-security:3002/api/v1"
+      - VITE_API_MS_PATIENT="http://ms-patient-ehr:3003/api/v1"
+      - VITE_API_MS_ADMIN_AUDIT="http://ms-admin-audit:3005/api/v1"
+    ports:
+      - "5173:5173"
+    expose:
+      - "5173"
+    networks:
+      medcore-network:
+        aliases:
+          - ms-frontend
+    restart: unless-stopped
+
+networks:
+  medcore-network:
+    external: true

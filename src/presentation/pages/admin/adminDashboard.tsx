@@ -1,17 +1,15 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 👈 Importa el hook
 import { AdminSidebar } from "./components/adminSidebar";
-import { SidebarProvider } from "../../components/ui/sidebar";
-import UserHeader from "../../components/globals/header";
+
 import {
   Stethoscope,
   UserPlus,
   Upload,
   HeartPulse,
 } from "lucide-react";
+import { DashboardLayout } from "../../layouts/layout";
 
 export function AdminDashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate(); // 👈 Inicializa el hook
 
   const sections = [
@@ -50,37 +48,25 @@ export function AdminDashboard() {
   ];
 
   return (
-    <>
-      <UserHeader showSearch={false} />
+      <DashboardLayout
+            sidebar={<AdminSidebar />}
+            showSearch={true}
+            headerHeightClass="pt-[80px]"
+            contentMaxWidthClass="max-w-7xl"
+            variant="inset"
+            collapsible="offcanvas"
+            mainClassName="pb-10 "
+            sidebarClassName=""
+            sidebarContentClassName=""
+        >
 
-      <SidebarProvider>
-        <div className="flex pt-[80px] min-h-screen bg-gradient-to-br from-gray-50 to-white">
-          {/* Botón móvil */}
-          <div className="md:hidden absolute top-4 left-4 z-20">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-3 rounded-lg bg-white shadow hover:bg-gray-100"
-              aria-label="Abrir menú lateral"
-            >
-              <span className="text-2xl">☰</span>
-            </button>
-          </div>
-
-          {/* Sidebar */}
-          <div
-            className={`${sidebarOpen ? "block" : "hidden"} md:block md:w-64 shrink-0`}
-          >
-            <AdminSidebar />
-          </div>
-
-          {/* Contenido principal */}
-          <main className="flex-1 flex justify-center items-start p-6 md:p-10">
+            <main className="flex-1 flex justify-center items-start p-6 md:p-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 max-w-6xl w-full">
               {sections.map((section) => (
                 <button
                   key={section.title}
                   onClick={section.action}
-                  className={`relative group bg-gradient-to-b ${section.color} rounded-2xl p-8 text-left shadow-lg transition-all duration-300 ${section.hover} hover:scale-105`}
+                  className={relative group bg-gradient-to-b ${section.color} rounded-2xl p-8 text-left shadow-lg transition-all duration-300 ${section.hover} hover:scale-105}
                 >
                   <div className="flex flex-col items-center text-center space-y-4">
                     <div className="bg-white p-4 rounded-full shadow-inner">
@@ -98,8 +84,6 @@ export function AdminDashboard() {
               ))}
             </div>
           </main>
-        </div>
-      </SidebarProvider>
-    </>
+        </DashboardLayout>
   );
 }
