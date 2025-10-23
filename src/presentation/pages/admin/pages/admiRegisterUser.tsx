@@ -25,6 +25,7 @@ export function AdminRegisterUser() {
     defaultValues: {
       email: "",
       current_password: "",
+      identificacion: "",
       date_of_birth: "",
       role: "PACIENTE",
       fullname: "",
@@ -39,9 +40,9 @@ export function AdminRegisterUser() {
         const response = await doctorsService.getSpecialties()
         console.log("📋 Especialidades recibidas:", response)
 
-        // ✅ Validamos y mapeamos correctamente los datos
-        if (response && Array.isArray(response.especialidades)) {
-          const mapped = response.especialidades.map((esp: any) => ({
+        // ✅ Ahora la respuesta ya es un array directamente
+        if (Array.isArray(response)) {
+          const mapped = response.map((esp: any) => ({
             id: esp.id,
             name: `${esp.nombre} (${esp.departamento?.nombre || "Sin departamento"})`,
           }))
@@ -58,9 +59,11 @@ export function AdminRegisterUser() {
   }, [])
 
   const onSubmit = async (data: RegisterUserDto) => {
+    console.log("📤 Enviando datos al backend:", data)
     setLoading(true)
     try {
-      await registerUser(data)
+      const res = await registerUser(data)
+      console.log("✅ Respuesta del backend:", res)
       Swal.fire({
         icon: "success",
         title: "Usuario registrado con éxito",
@@ -69,10 +72,11 @@ export function AdminRegisterUser() {
       })
       reset()
     } catch (error: any) {
+      console.error("❌ Error al registrar usuario:", error)
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.message || "No se pudo registrar",
+        text: error.message || "No se pudo registrar el usuario",
       })
     } finally {
       setLoading(false)
@@ -111,14 +115,15 @@ export function AdminRegisterUser() {
           </h2>
         </motion.div>
 
+        {/* 🔧 Formulario interno */}
         <UserForm
-            control={control}
-            onSubmit={handleSubmit(onSubmit)}
-            errors={errors}
-            loading={loading}
-            specialties={specialties}
-            selectedRole={selectedRole}
-            />
+          control={control}
+          onSubmit={handleSubmit(onSubmit)}
+          errors={errors}
+          loading={loading}
+          specialties={specialties}
+          selectedRole={selectedRole}
+        />
       </motion.div>
     </div>
   )

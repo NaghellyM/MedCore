@@ -8,5 +8,6 @@ export interface RegisterUserDto {
     department?: string
     license_number?: string
     phone?: string
+    identificacion: string
     date_of_birth?: string
 }

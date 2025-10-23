@@ -2,7 +2,7 @@ import { useRef, useState } from "react"
 import Papa from "papaparse"
 import * as Yup from "yup"
 import Swal from "sweetalert2"
-import { UploadCloud, FileSpreadsheet, Download, ArrowLeftCircle } from "lucide-react"
+import { UploadCloud, Download, ArrowLeftCircle, CheckCircle, XCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { uploadUsersCsv } from "../../../../core/services/userImportService"
 
@@ -64,6 +64,7 @@ async function parseAndValidateCsv(file: File) {
 export function AdminRegisterCSV() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [loading, setLoading] = useState(false)
+  const [importResult, setImportResult] = useState<any>(null)
   const navigate = useNavigate()
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +83,7 @@ export function AdminRegisterCSV() {
       const result: any = await parseAndValidateCsv(file)
       Swal.close()
 
-      Swal.fire({
+      const confirmed = await Swal.fire({
         icon: "success",
         title: "Archivo válido",
         html: `<p class="text-gray-600">Se validaron correctamente <b>${result.data.length}</b> usuarios.</p>
@@ -93,41 +94,29 @@ export function AdminRegisterCSV() {
         confirmButtonColor: "#2563eb",
         cancelButtonColor: "#6b7280",
         background: "#f9fafb",
-      }).then(async (response) => {
-        if (response.isConfirmed) {
-          Swal.fire({
-            title: "Enviando datos...",
-            text: "Subiendo archivo al servidor.",
-            allowOutsideClick: false,
-            didOpen: () => Swal.showLoading(),
-          })
+      })
 
-          try {
-            const backendResponse = await uploadUsersCsv(file)
-            Swal.fire({
-              icon: "success",
-              title: "Carga completada",
-              text: "El archivo fue enviado exitosamente al backend.",
-              confirmButtonColor: "#2563eb",
-            })
-            console.log("📦 Respuesta del backend:", backendResponse)
-          } catch (err) {
-            Swal.fire({
-              icon: "error",
-              title: "Error al enviar",
-              text: "No se pudo enviar el archivo al backend.",
-              confirmButtonColor: "#dc2626",
-            })
-          }
-        } else {
+      if (confirmed.isConfirmed) {
+        Swal.fire({
+          title: "Enviando datos...",
+          text: "Subiendo archivo al servidor.",
+          allowOutsideClick: false,
+          didOpen: () => Swal.showLoading(),
+        })
+
+        try {
+          const backendResponse = await uploadUsersCsv(file)
+          setImportResult(backendResponse) // <-- Guardamos la respuesta del backend
+          Swal.close()
+        } catch (err) {
           Swal.fire({
-            icon: "info",
-            title: "Carga cancelada",
-            text: "El archivo no fue enviado al servidor.",
-            confirmButtonColor: "#2563eb",
+            icon: "error",
+            title: "Error al enviar",
+            text: "No se pudo enviar el archivo al backend.",
+            confirmButtonColor: "#dc2626",
           })
         }
-      })
+      }
     } catch (error: any) {
       Swal.close()
       const errorList =
@@ -178,7 +167,7 @@ export function AdminRegisterCSV() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 p-6 flex flex-col items-center">
-      {/* Botón Volver arriba a la izquierda */}
+      {/* Botón Volver */}
       <div className="w-full max-w-4xl mb-6 flex justify-start">
         <button
           onClick={() => navigate(-1)}
@@ -201,7 +190,7 @@ export function AdminRegisterCSV() {
           <p className="text-gray-500 mt-1">Sube un archivo CSV con los usuarios a registrar.</p>
         </div>
 
-        {/* Botones */}
+        {/* Botón descargar plantilla */}
         <div className="flex justify-end mb-6">
           <button
             onClick={handleDownloadTemplate}
@@ -214,11 +203,6 @@ export function AdminRegisterCSV() {
 
         {/* Área de carga */}
         <div className="border-2 border-dashed border-blue-300 rounded-2xl p-8 bg-blue-50 hover:bg-blue-100 transition cursor-pointer text-center flex flex-col items-center">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/2910/2910769.png"
-            alt="Subir archivo"
-            className="w-20 h-20 mb-4 animate-bounce"
-          />
           <input
             type="file"
             accept=".csv"
@@ -233,6 +217,54 @@ export function AdminRegisterCSV() {
             <span className="text-sm text-gray-500">Solo archivos .csv</span>
           </label>
         </div>
+
+        {/* --- Resultado de la importación --- */}
+        {importResult && (
+          <div className="mt-8 space-y-6">
+            <h3 className="text-xl font-semibold text-gray-800">Resumen de importación</h3>
+
+            {/* Usuarios importados */}
+            {importResult.usuariosImportados?.length > 0 && (
+              <div>
+                <h4 className="text-lg font-medium text-green-600 mb-2">✅ Usuarios importados</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {importResult.usuariosImportados.map((user: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg shadow-sm"
+                    >
+                      <CheckCircle className="text-green-500 w-6 h-6 mr-2" />
+                      <div>
+                        <p className="font-semibold">{user.fullname}</p>
+                        <p className="text-sm text-green-700">
+                          {user.role} - {user.identificacion}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Errores */}
+            {importResult.errors?.length > 0 && (
+              <div>
+                <h4 className="text-lg font-medium text-red-600 mb-2">⚠️ Usuarios no importados</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {importResult.errors.map((err: string, idx: number) => (
+                    <div
+                      key={idx}
+                      className="flex items-center p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm"
+                    >
+                      <XCircle className="text-red-500 w-6 h-6 mr-2" />
+                      <p className="text-sm text-red-700">{err}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

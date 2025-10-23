@@ -106,7 +106,7 @@ export default function DoctorsList() {
         return
       }
 
-      const xmappedDoctors: DoctorCardData[] = users.map((doc: DoctorApi) => ({
+      const   mappedDoctors: DoctorCardData[] = users.map((doc: DoctorApi) => ({
         id: doc.id,
         name: doc.fullname,
         identification: doc.identificacion || "N/A",
