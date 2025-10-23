@@ -10,7 +10,7 @@ export const nurseRoutes: RouteObject = {
         {
             element: <RootLayout />,
             children: [
-                { path: "nursePage", element: <NurseDashboard /> },
+                { path: "/nursePage", element: <NurseDashboard /> },
                 
             ],
         },
