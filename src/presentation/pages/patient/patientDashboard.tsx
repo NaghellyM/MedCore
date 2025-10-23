@@ -1,6 +1,6 @@
 import { PatientPageContent } from "./page/patientPage";
 import { PatientSidebar } from "./components/patientSidebar";
-import { DashboardLayout } from "../../layouts/DashboardLayout";
+import { DashboardLayout } from "../../layouts/layout";
 
 export function PatientDashboard() {
     return (

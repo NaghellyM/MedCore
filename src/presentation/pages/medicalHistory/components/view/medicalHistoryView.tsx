@@ -1,7 +1,5 @@
-// src/presentation/medical/components/view/MedicalHistoryView.tsx
-"use client"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../../../components/ui/tabs"
-import { DashboardLayout } from "../../../../layouts/DashboardLayout"
+import { DashboardLayout } from "../../../../layouts/layout"
 import { NurseSidebar } from "../../../nurse/components/nurseSidebar"
 import type { EncounterPayload } from "../../../../../core/types/medical"
 

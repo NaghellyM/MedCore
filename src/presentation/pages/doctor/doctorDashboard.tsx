@@ -1,6 +1,6 @@
 import { DoctorPage } from "./page/doctorPage";
 import DoctorSidebar from "./components/doctorSideBar";
-import { DashboardLayout } from "../../layouts/DashboardLayout";
+import { DashboardLayout } from "../../layouts/layout";
 
 export function DoctorDashboard() {
   return (

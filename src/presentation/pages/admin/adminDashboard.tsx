@@ -1,5 +1,5 @@
 
-import { DashboardLayout } from "../../layouts/DashboardLayout";
+import { DashboardLayout } from "../../layouts/layout";
 import { AdminSidebar } from "./components/adminSidebar";
 import { AdminRegisterCSV } from "./pages/admiRegisterCSV";
 import { AdminRegisterUser } from "./pages/admiRegisterUser";

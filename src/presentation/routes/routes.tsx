@@ -9,9 +9,10 @@ import { DoctorDashboard } from '../pages/doctor/doctorDashboard';
 import { PatientDashboard } from '../pages/patient/patientDashboard';
 import { AdminRegisterCSV } from '../pages/admin/pages/admiRegisterCSV';
 import { AdminRegisterUser } from '../pages/admin/pages/admiRegisterUser';
-import MedicalHistoryForm from '../pages/medical/components/form/medicalHistoryForm';
+import MedicalHistoryForm from '../pages/medicalHistory/components/form/medicalHistoryForm';
 import type { EncounterPayload } from '../../core/types/medical';
-import Page from '../pages/medical/page';
+import CreateEncounterPage from '../pages/encounter/pages/createEncounterPage';
+import Page from '../pages/medicalHistory/page';
 const router = createBrowserRouter([
     {
         path: '/',
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
                 path:'/medicalHistory/view',
                 element: <Page />,
             },
+            {
+                path: '/encounter',
+                element: <CreateEncounterPage />,
+            }
         ]
     }
 ]);

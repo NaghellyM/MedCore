@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import type { EncounterPayload } from "../../../../../core/types/medical"
 import { useMedicalHistoryForm } from "../../../../hooks/useMedicalHistoryForm"
 
-import { DashboardLayout } from "../../../../layouts/DashboardLayout"
+import { DashboardLayout } from "../../../../layouts/layout"
 import { NurseSidebar } from "../../../nurse/components/nurseSidebar"
 import PatientSection from "./sections/patientSectionForm"
 import EncounterSection from "./sections/encounterSectionForm"

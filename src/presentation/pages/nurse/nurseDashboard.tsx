@@ -1,6 +1,6 @@
 import { NursePageContent } from "./page/nursePage";
 import { NurseSidebar } from "./components/nurseSidebar";
-import { DashboardLayout } from "../../layouts/DashboardLayout";
+import { DashboardLayout } from "../../layouts/layout";
 
 export function NurseDashboard() {
     return (
