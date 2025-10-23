@@ -37,6 +37,7 @@ export default function DoctorsList() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 20
   const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
 
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
@@ -60,8 +61,7 @@ export default function DoctorsList() {
     const loadSpecialties = async () => {
       try {
         const response = await doctorsService.getSpecialties()
-        const especialidades = response || []
-        setSpecialties(especialidades)
+        setSpecialties(response || [])
       } catch (error) {
         console.error("❌ Error al cargar especialidades:", error)
       }
@@ -70,7 +70,7 @@ export default function DoctorsList() {
     loadSpecialties()
   }, [])
 
-  // 🔹 Obtener doctores
+  // 🔹 Obtener doctores (con paginación)
   const fetchDoctors = async () => {
     try {
       setLoading(true)
@@ -80,33 +80,36 @@ export default function DoctorsList() {
       if (debouncedSearch.trim()) {
         response = await doctorsService.searchByNameOrId(debouncedSearch, currentPage, itemsPerPage)
       } else if (selectedSpecialty) {
-        response = await doctorsService.filterBySpecialty(selectedSpecialty)
-        console.log("Respuesta por especialidad:", response)
+        response = await doctorsService.filterBySpecialty(selectedSpecialty, currentPage, itemsPerPage)
       } else if (statusFilter) {
         response = await doctorsService.filterByStatus(statusFilter, currentPage, itemsPerPage)
       } else {
         response = await doctorsService.getAll(currentPage, itemsPerPage)
       }
 
-      // 🧩 Si el backend devuelve texto de error
-      if (typeof response === "string") {
-        if (response.toLowerCase().includes("no se encontraron")) {
-          setDoctors([])
-          setTotalPages(1)
-          return
-        } else throw new Error(response)
+      console.log("🩺 Respuesta del backend (doctors):", response)
+
+      let users: any[] = []
+      let total = 0
+
+      if (Array.isArray(response)) {
+        users = response
+        total = users.length
+      } else if (response && typeof response === "object") {
+        if (Array.isArray(response.data)) {
+          users = response.data
+          total = response.total || response.data.length
+        } else {
+          const nestedArray = Object.values(response).find(Array.isArray)
+          if (nestedArray) users = nestedArray
+          total = users.length
+        }
       }
 
-      // 🔹 Ahora tomamos los doctores correctamente
-      const users: any[] = response.doctors || response.users || []
+      setTotalItems(total)
+      setTotalPages(Math.ceil(total / itemsPerPage))
 
-      if (!users.length) {
-        setDoctors([])
-        setTotalPages(1)
-        return
-      }
-
-      const   mappedDoctors: DoctorCardData[] = users.map((doc: DoctorApi) => ({
+      const mappedDoctors: DoctorCardData[] = users.map((doc: DoctorApi) => ({
         id: doc.id,
         name: doc.fullname,
         identification: doc.identificacion || "N/A",
@@ -116,7 +119,6 @@ export default function DoctorsList() {
       }))
 
       setDoctors(mappedDoctors)
-      setTotalPages(1) // sin paginación
     } catch (err) {
       console.error("Error al obtener doctores:", err)
       setError("No se pudieron cargar los doctores.")
@@ -130,7 +132,7 @@ export default function DoctorsList() {
   }, [statusFilter, selectedSpecialty, currentPage, debouncedSearch])
 
   // 🔹 Filtros
-  const handleStatusChange = (status: "active" | "inactive" | "pending") => {
+  const handleStatusChange = (status: "active" | "inactive" | "pending" | "") => {
     setStatusFilter(status)
     setSelectedSpecialty("")
     setSearchTerm("")
@@ -151,8 +153,12 @@ export default function DoctorsList() {
 
   return (
     <div className="p-6 space-y-6">
+      {/* Encabezado */}
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-3xl font-bold text-gray-800">👩‍⚕️ Listado de Doctores</h1>
+        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+          👨‍⚕️ Listado de Doctores
+          <span className="text-sm text-gray-500">({totalItems} en total)</span>
+        </h1>
         <button
           onClick={() => navigate("/adminpage")}
           className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 focus:ring-4 focus:ring-blue-300"
@@ -162,28 +168,47 @@ export default function DoctorsList() {
         </button>
       </div>
 
-      {/* Filtros y búsqueda */}
+      {/* Filtros */}
       <div className="flex flex-wrap gap-3 mb-6 items-center">
+        <button
+          onClick={() => handleStatusChange("")}
+          className={`px-4 py-2 rounded-full font-medium shadow transition ${
+            statusFilter === ""
+              ? "bg-blue-600 text-white shadow-md scale-105"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+        >
+          Todos
+        </button>
+
         <button
           onClick={() => handleStatusChange("active")}
           className={`px-4 py-2 rounded-full font-medium shadow transition ${
-            statusFilter === "active" ? "bg-green-600 text-white shadow-md scale-105" : "bg-gray-200 hover:bg-gray-300"
+            statusFilter === "active"
+              ? "bg-green-600 text-white shadow-md scale-105"
+              : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
           Activos
         </button>
+
         <button
           onClick={() => handleStatusChange("inactive")}
           className={`px-4 py-2 rounded-full font-medium shadow transition ${
-            statusFilter === "inactive" ? "bg-red-600 text-white shadow-md scale-105" : "bg-gray-200 hover:bg-gray-300"
+            statusFilter === "inactive"
+              ? "bg-red-600 text-white shadow-md scale-105"
+              : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
           Inactivos
         </button>
+
         <button
           onClick={() => handleStatusChange("pending")}
           className={`px-4 py-2 rounded-full font-medium shadow transition ${
-            statusFilter === "pending" ? "bg-yellow-500 text-white shadow-md scale-105" : "bg-gray-200 hover:bg-gray-300"
+            statusFilter === "pending"
+              ? "bg-yellow-500 text-white shadow-md scale-105"
+              : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
           Pendientes
@@ -242,6 +267,27 @@ export default function DoctorsList() {
             {doctors.map((doctor) => (
               <DoctorCard key={doctor.id} doctor={doctor} />
             ))}
+          </div>
+
+          {/* 🔹 Paginación */}
+          <div className="flex items-center justify-center mt-8 gap-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
+            >
+              ← Anterior
+            </button>
+            <span className="text-gray-700 font-medium">
+              Página <span className="font-bold">{currentPage}</span> de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
+            >
+              Siguiente →
+            </button>
           </div>
         </>
       )}
