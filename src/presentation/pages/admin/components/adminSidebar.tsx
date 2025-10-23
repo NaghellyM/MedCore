@@ -5,7 +5,8 @@ import { UsersRound, Upload, Shield, HeartPulse, LayoutGrid, Activity, KeySquare
 const items = [
     { title: "Registro de usuarios", url: "#", icon: UsersRound },
     { title: "Carga Masiva de Usuarios", url: "#", icon: Upload },
-    { title: "Gestión de pacientes", url: "#", icon: HeartPulse },
+    { title: "Gestión de pacientes", url: "/medicalHistory", icon: HeartPulse },
+    { title: "Gestión de médicos", url: "/encounter", icon: UsersRound },
 ];
 
 const securityItems = [
