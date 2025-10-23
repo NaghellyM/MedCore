@@ -1,30 +1,23 @@
-import { useState } from 'react';
-import { NursePageContent } from './page/nursePage';
-import { NurseSidebar } from './components/nurseSidebar';
-import UserHeader from '../../components/globals/header';
-import { SidebarProvider } from "../../components/ui/sidebar";
+import { NursePageContent } from "./page/nursePage";
+import { NurseSidebar } from "./components/nurseSidebar";
+import { DashboardLayout } from "../../layouts/layout";
 
 export function NurseDashboard() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-
     return (
-        <>
-            <UserHeader showSearch={true} />
-            <SidebarProvider>
-                <div className="flex pt-[80px] items-start gap-4">
-                    <div className="md:hidden">
-                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-4">
-                            <span className="text-2xl">☰</span>
-                        </button>
-                    </div>
-                    <div className={`md:block w-64 ${sidebarOpen ? 'block' : 'hidden'} md:block`}>
-                        <NurseSidebar />
-                    </div>
-                    <main className="flex-1 pt-[80px] items-start min-h-screen">
-                        <NursePageContent />
-                    </main>
-                </div>
-            </SidebarProvider>
-        </>
+        <DashboardLayout
+            sidebar={<NurseSidebar />}
+            showSearch={true}
+            headerHeightClass="pt-[80px]"
+            contentMaxWidthClass="max-w-7xl"
+            variant="inset"          
+            collapsible="offcanvas"  
+            mainClassName="pb-10 "
+            sidebarClassName=""
+            sidebarContentClassName=""
+        >
+            <div className="min-h-[calc(100vh-5rem)] w-full">
+                <NursePageContent />
+            </div>
+        </DashboardLayout>
     );
 }

@@ -3,13 +3,17 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Eye, EyeOff } from "lucide-react";
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { loginSchema } from '../../../core/validators/validationLogin';
-import { useRedirectByRole } from '../../../presentation/hooks/useRedirectByRole';
-import { useAuth } from '../../../core/context/authContext'
+import { useAuth } from '../../../core/context/authContext';
 import type { IFormInput } from '../../../core/types/types';
+
 import FormInput from '../../components/globals/input';
 import FormButton from '../../components/globals/button';
 import LoginVerification from './components/loginVerification';
+
+type Role = 'admin' | 'doctor' | 'nurse' | 'patient';
 
 const Form: React.FC = () => {
   const { control, handleSubmit, formState: { errors } } = useForm<IFormInput>({
@@ -18,23 +22,62 @@ const Form: React.FC = () => {
   });
 
   const [isVisible, setIsVisible] = useState(false);
-  const toggleVisibility = () => setIsVisible((v) => !v);
+  const toggleVisibility = () => setIsVisible(v => !v);
 
   const [email, setEmail] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [needsVerification, setNeedsVerification] = useState<boolean>(false);
+
   const { loginUser } = useAuth();
-  const redirectByRole = useRedirectByRole();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+
+  const goToRoleHome = (role: Role | undefined) => {
+    const dest =
+      role === 'admin' ? '/adminPage' :
+        role === 'doctor' ? '/doctorPage' :
+          role === 'nurse' ? '/nursePage' :
+            '/patientPage';
+    navigate(dest, { replace: true });
+  };
+
+  const mapRoleToEnglish = (role: string): Role => {
+    const roleMap: Record<string, Role> = {
+      'ADMINISTRADOR': 'admin',
+      'ADMIN': 'admin',
+      'MEDICO': 'doctor',
+      'DOCTOR': 'doctor',
+      'ENFERMERO': 'nurse',
+      'NURSE': 'nurse',
+      'PACIENTE': 'patient',
+      'PATIENT': 'patient',
+    };
+    return roleMap[role.toUpperCase()] || 'patient';
+  };
 
   const onSubmit = async (data: IFormInput) => {
     try {
-      const res = await loginUser({ email: data.email, password: data.password });
-      if (res && res.message && res.message.includes("email")) {
+      const res: any = await loginUser({ email: data.email, password: data.password });
+      console.log("Login response:", res);
+
+      if (res?.message && String(res.message).toLowerCase().includes("email")) {
         setEmail(data.email);
         setNeedsVerification(true);
-      } else {
-        redirectByRole(res.accessToken);
+        return;
       }
+
+      const redirect = params.get('redirect');
+      if (redirect && redirect !== '/login') {
+        console.log("Redirecting to:", redirect);
+        navigate(redirect, { replace: true });
+        return;
+      }
+
+      // Obtener el rol del usuario desde localStorage (ya guardado por authService)
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const role: Role = mapRoleToEnglish(user?.role || '');
+      console.log("User role:", role, "from:", user?.role);
+      goToRoleHome(role);
     } catch (err: any) {
       const errorMessage = err?.message || err?.toString() || "Error al iniciar sesión";
       Swal.fire({ icon: 'warning', title: '', text: errorMessage });
@@ -42,20 +85,29 @@ const Form: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className=" grid grid-cols-1 md:grid-cols-2 min-h-screen  items-center justify-center px-4 sm:px-6 lg:px-8">
+      <img
+        src="/logoCuidarte.png"
+        alt="logo-cuidarte"
+        className="w-30 h-30 "
+      />
+
       <div className="w-full max-w-[22rem] sm:max-w-md md:max-w-lg lg:max-w-xl">
         <h1 className="text-center font-bold text-2xl sm:text-3xl lg:text-4xl tracking-tight text-gray-900">
           Bienvenidos a Cuidarte
         </h1>
-        <div className="mt-6 sm:mt-8 bg-white  p-5 sm:p-7 lg:p-8">
+
+
+
+        <div className="mt-6 sm:mt-8 bg-white p-5 sm:p-7 lg:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
-            
             <FormInput
               name="email"
               label="Correo Electrónico"
               control={control}
               error={errors.email}
             />
+
             <div className="relative">
               <FormInput
                 name="password"
@@ -63,7 +115,6 @@ const Form: React.FC = () => {
                 type={isVisible ? "text" : "password"}
                 control={control}
                 error={errors.password}
-            
               />
               <button
                 type="button"
@@ -75,8 +126,17 @@ const Form: React.FC = () => {
                 {isVisible ? <EyeOff size={20} aria-hidden="true" /> : <Eye size={20} aria-hidden="true" />}
               </button>
             </div>
-            <FormButton type="submit" label="Iniciar sesión"  />
+
+            <FormButton type="submit" label="Iniciar sesión" />
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="w-full bg-red-100 text-black py-2 font-semibold rounded-md"
+            >
+              Regresar
+            </button>
           </form>
+
           {needsVerification && (
             <div className="mt-6 sm:mt-8">
               <LoginVerification email={email} code={code} setCode={setCode} />
