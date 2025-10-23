@@ -21,3 +21,9 @@
     --sidebar-border: rgba(255, 255, 255, 0.1);
   }
 }
+
+@layer components {
+  .btn {
+    @apply flex items-center gap-2 bg-cuidarte-accent text-white font-sans font-bold;
+  }
+}

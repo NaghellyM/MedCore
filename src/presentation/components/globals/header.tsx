@@ -48,7 +48,7 @@ export default function UserHeader({ showSearch = true }: UserHeaderProps) {
                     <div className="text-xs text-slate-500">{user?.role}</div>
                 </div>
                 <div>
-                    <Button onClick={logoutUser} className="flex items-center gap-2 bg-cuidarte-accent text-white font-sans font-bold" variant="outline">
+                    <Button onClick={logoutUser} className="btn" variant="outline">
                         <ArrowRightFromLine />
                         Cerrar Sesión</Button>
                 </div>
