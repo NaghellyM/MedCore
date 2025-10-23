@@ -3,8 +3,6 @@ import { useAuth } from "../../core/context/authContext";
 
 
 type Role = "admin" | "doctor" | "nurse" | "patient";
-
-// Mapear roles del backend (español) a roles del frontend (inglés)
 const mapRoleToEnglish = (role: string): Role => {
     const roleMap: Record<string, Role> = {
         'ADMINISTRADOR': 'admin',
@@ -12,6 +10,7 @@ const mapRoleToEnglish = (role: string): Role => {
         'MEDICO': 'doctor',
         'DOCTOR': 'doctor',
         'ENFERMERO': 'nurse',
+        'ENFERMERA': 'nurse',
         'NURSE': 'nurse',
         'PACIENTE': 'patient',
         'PATIENT': 'patient',
@@ -37,15 +36,14 @@ export function RoleRoute({ allow }: { allow: Role[] }) {
 
     if (loading) return <div className="p-6">Cargando…</div>;
     if (!isAuthenticated) return <Navigate to="/login" replace />;
-    
+
     const rawRole = (user?.role ?? user?.rol ?? user?.userRole) as string | undefined;
+    console.log("RoleRoute - User role from context:", rawRole);
     const role: Role = rawRole ? mapRoleToEnglish(rawRole) : 'patient';
-    
+
     console.log("RoleRoute - Raw role:", rawRole, "Mapped role:", role, "Allowed:", allow);
-    
-    // Verificar si el rol está permitido para esta ruta
+
     if (!role || !allow.includes(role)) {
-        // Si el rol no está permitido, redirigir a su página de dashboard
         if (role === "admin") {
             return <Navigate to="/adminPage" replace />;
         }
@@ -61,13 +59,13 @@ export function RoleRoute({ allow }: { allow: Role[] }) {
         // Si no tiene rol definido, redirigir a home
         return (
             <Navigate
-            to="/"
-            replace
-            state={{ from: loc.pathname, reason: "forbidden" }}
+                to="/"
+                replace
+                state={{ from: loc.pathname, reason: "forbidden" }}
             />
         );
     }
-    
+
     // Si el rol está permitido, mostrar el contenido
     return <Outlet />;
 }
