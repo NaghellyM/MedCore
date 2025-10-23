@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 interface Especializacion {
   id: string
   nombre: string
+  departamento?: { nombre: string }
 }
 
 interface DoctorApi {
@@ -26,7 +27,6 @@ interface DoctorCardData {
   avatar: string
 }
 
-
 export default function DoctorsList() {
   const [doctors, setDoctors] = useState<DoctorCardData[]>([])
   const [loading, setLoading] = useState(true)
@@ -34,22 +34,19 @@ export default function DoctorsList() {
   const [statusFilter, setStatusFilter] = useState<"active" | "inactive" | "pending" | "">("")
   const [specialties, setSpecialties] = useState<Especializacion[]>([])
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>("")
-
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 20
   const [totalPages, setTotalPages] = useState(1)
 
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
-
   const navigate = useNavigate()
 
-  // 🔹 Debounce de búsqueda
+  // 🔹 Debounce búsqueda
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm)
       setCurrentPage(1)
-
       if (searchTerm.trim()) {
         setStatusFilter("")
         setSelectedSpecialty("")
@@ -60,18 +57,20 @@ export default function DoctorsList() {
 
   // 🔹 Cargar especialidades
   useEffect(() => {
-    const fetchSpecialties = async () => {
+    const loadSpecialties = async () => {
       try {
         const response = await doctorsService.getSpecialties()
-        setSpecialties(response.especialidades || [])
-      } catch (err) {
-        console.error("Error al cargar especialidades:", err)
+        const especialidades = response || []
+        setSpecialties(especialidades)
+      } catch (error) {
+        console.error("❌ Error al cargar especialidades:", error)
       }
     }
-    fetchSpecialties()
+
+    loadSpecialties()
   }, [])
 
-  // 🔹 Obtener doctores según filtros
+  // 🔹 Obtener doctores
   const fetchDoctors = async () => {
     try {
       setLoading(true)
@@ -79,41 +78,35 @@ export default function DoctorsList() {
       let response: any
 
       if (debouncedSearch.trim()) {
-        response = await doctorsService.searchByNameOrId(debouncedSearch)
+        response = await doctorsService.searchByNameOrId(debouncedSearch, currentPage, itemsPerPage)
       } else if (selectedSpecialty) {
         response = await doctorsService.filterBySpecialty(selectedSpecialty)
+        console.log("Respuesta por especialidad:", response)
       } else if (statusFilter) {
-        response = await doctorsService.filterByStatus(statusFilter)
+        response = await doctorsService.filterByStatus(statusFilter, currentPage, itemsPerPage)
       } else {
-        response = await doctorsService.getAll()
+        response = await doctorsService.getAll(currentPage, itemsPerPage)
       }
 
-      // 🧩 Manejo si backend devuelve texto
+      // 🧩 Si el backend devuelve texto de error
       if (typeof response === "string") {
         if (response.toLowerCase().includes("no se encontraron")) {
           setDoctors([])
-          setLoading(false)
+          setTotalPages(1)
           return
         } else throw new Error(response)
       }
 
-      let users: any[] = []
-      if (Array.isArray(response)) users = response
-      else if (Array.isArray(response.users)) users = response.users
-      else if (Array.isArray(response.doctors)) users = response.doctors
-      else if (Array.isArray(response.data)) users = response.data
-      else {
-        const nested = Object.values(response).find(Array.isArray)
-        if (nested) users = nested
+      // 🔹 Ahora tomamos los doctores correctamente
+      const users: any[] = response.doctors || response.users || []
+
+      if (!users.length) {
+        setDoctors([])
+        setTotalPages(1)
+        return
       }
 
-      const total = users.length
-      setTotalPages(Math.ceil(total / itemsPerPage))
-
-      const start = (currentPage - 1) * itemsPerPage
-      const paginated = users.slice(start, start + itemsPerPage)
-
-      const mappedDoctors: DoctorCardData[] = paginated.map((doc: DoctorApi) => ({
+      const mappedDoctors: DoctorCardData[] = users.map((doc: DoctorApi) => ({
         id: doc.id,
         name: doc.fullname,
         identification: doc.identificacion || "N/A",
@@ -122,8 +115,8 @@ export default function DoctorsList() {
         avatar: `https://avatar.iran.liara.run/public/boy`,
       }))
 
-
       setDoctors(mappedDoctors)
+      setTotalPages(1) // sin paginación
     } catch (err) {
       console.error("Error al obtener doctores:", err)
       setError("No se pudieron cargar los doctores.")
@@ -156,12 +149,10 @@ export default function DoctorsList() {
     setCurrentPage(newPage)
   }
 
-  // 🔹 UI
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-3xl font-bold text-gray-800">👩‍⚕️ Listado de Doctores</h1>
-
         <button
           onClick={() => navigate("/adminpage")}
           className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-md hover:from-blue-600 hover:to-blue-700 transition-all duration-300 hover:scale-105 focus:ring-4 focus:ring-blue-300"
@@ -176,31 +167,23 @@ export default function DoctorsList() {
         <button
           onClick={() => handleStatusChange("active")}
           className={`px-4 py-2 rounded-full font-medium shadow transition ${
-            statusFilter === "active"
-              ? "bg-green-600 text-white shadow-md scale-105"
-              : "bg-gray-200 hover:bg-gray-300"
+            statusFilter === "active" ? "bg-green-600 text-white shadow-md scale-105" : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
           Activos
         </button>
-
         <button
           onClick={() => handleStatusChange("inactive")}
           className={`px-4 py-2 rounded-full font-medium shadow transition ${
-            statusFilter === "inactive"
-              ? "bg-red-600 text-white shadow-md scale-105"
-              : "bg-gray-200 hover:bg-gray-300"
+            statusFilter === "inactive" ? "bg-red-600 text-white shadow-md scale-105" : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
           Inactivos
         </button>
-
         <button
           onClick={() => handleStatusChange("pending")}
           className={`px-4 py-2 rounded-full font-medium shadow transition ${
-            statusFilter === "pending"
-              ? "bg-yellow-500 text-white shadow-md scale-105"
-              : "bg-gray-200 hover:bg-gray-300"
+            statusFilter === "pending" ? "bg-yellow-500 text-white shadow-md scale-105" : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
           Pendientes
@@ -214,7 +197,7 @@ export default function DoctorsList() {
           <option value="">Todas las especialidades</option>
           {specialties.map((spec) => (
             <option key={spec.id} value={spec.nombre}>
-              {spec.nombre}
+              {spec.nombre} ({spec.departamento?.nombre || "Sin departamento"})
             </option>
           ))}
         </select>
@@ -242,35 +225,23 @@ export default function DoctorsList() {
       ) : error ? (
         <p className="text-red-500 text-center">{error}</p>
       ) : doctors.length === 0 ? (
-        <p className="text-gray-500 text-center">
-          No se encontraron doctores para los filtros o búsqueda.
-        </p>
+        <div className="flex flex-col items-center justify-center h-64 text-center text-gray-500">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+            alt="Sin resultados"
+            className="w-20 h-20 mb-4 opacity-70"
+          />
+          <p className="text-lg font-medium">No se encontraron doctores.</p>
+          <p className="text-sm text-gray-400">
+            Intenta cambiar los filtros o realizar otra búsqueda.
+          </p>
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {doctors.map((doctor) => (
               <DoctorCard key={doctor.id} doctor={doctor} />
             ))}
-          </div>
-
-          <div className="flex items-center justify-center mt-8 gap-4">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
-            >
-              ← Anterior
-            </button>
-            <span className="text-gray-700 font-medium">
-              Página <span className="font-bold">{currentPage}</span> de {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
-            >
-              Siguiente →
-            </button>
           </div>
         </>
       )}

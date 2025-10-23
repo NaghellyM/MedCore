@@ -26,8 +26,9 @@ export default function NursesList() {
   const [error, setError] = useState<string | null>(null)
   const [statusFilter, setStatusFilter] = useState<"active" | "inactive" | "pending" | "">("")
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 9
+  const itemsPerPage = 20 // 🔹 ahora máximo 20 por página
   const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
 
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearch, setDebouncedSearch] = useState("")
@@ -52,39 +53,37 @@ export default function NursesList() {
 
       let response: any
       if (debouncedSearch.trim()) {
-        response = await nursesService.searchByNameOrId(debouncedSearch)
+        response = await nursesService.searchByNameOrId(debouncedSearch, currentPage, itemsPerPage)
       } else if (statusFilter) {
-        response = await nursesService.filterByStatus(statusFilter)
+        response = await nursesService.filterByStatus(statusFilter, currentPage, itemsPerPage)
       } else {
-        response = await nursesService.getAll()
+        response = await nursesService.getAll(currentPage, itemsPerPage)
       }
 
       console.log("🩺 Respuesta del backend (nurses):", response)
 
       let users: any[] = []
+      let total = 0
+
       if (Array.isArray(response)) {
         users = response
-      } else if (Array.isArray(response.users)) {
-        users = response.users
-      } else if (Array.isArray(response.data)) {
-        users = response.data
+        total = users.length
       } else if (response && typeof response === "object") {
-        const nestedArray = Object.values(response).find(Array.isArray)
-        if (nestedArray) users = nestedArray
+        // Backend con paginación: { data: [...], total: 50 }
+        if (Array.isArray(response.data)) {
+          users = response.data
+          total = response.total || response.data.length
+        } else {
+          const nestedArray = Object.values(response).find(Array.isArray)
+          if (nestedArray) users = nestedArray
+          total = users.length
+        }
       }
 
-      if (!Array.isArray(users)) {
-        console.warn("⚠️ No se encontró lista de enfermeros:", response)
-        users = []
-      }
-
-      const total = users.length
+      setTotalItems(total)
       setTotalPages(Math.ceil(total / itemsPerPage))
-      const start = (currentPage - 1) * itemsPerPage
-      const end = start + itemsPerPage
-      const paginatedUsers = users.slice(start, end)
 
-      const mappedNurses: NurseCardData[] = paginatedUsers.map((n: NurseApi) => ({
+      const mappedNurses: NurseCardData[] = users.map((n: NurseApi) => ({
         id: n.id,
         fullname: n.fullname,
         identificacion: n.identificacion || "N/A",
@@ -93,9 +92,14 @@ export default function NursesList() {
       }))
 
       setNurses(mappedNurses)
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error al obtener enfermeros:", err)
-      setError("No se pudieron cargar los enfermeros.")
+      if (err.response?.status === 404) {
+        setNurses([])
+        setError(null)
+      } else {
+        setError("Hubo un problema al cargar los enfermeros.")
+      }
     } finally {
       setLoading(false)
     }
@@ -106,7 +110,7 @@ export default function NursesList() {
   }, [statusFilter, currentPage, debouncedSearch])
 
   // 🔹 Filtros
-  const handleStatusChange = (status: "active" | "inactive" | "pending") => {
+  const handleStatusChange = (status: "active" | "inactive" | "pending" | "") => {
     setStatusFilter(status)
     setSearchTerm("")
     setCurrentPage(1)
@@ -136,6 +140,17 @@ export default function NursesList() {
 
       {/* Filtros y búsqueda */}
       <div className="flex flex-wrap gap-3 mb-6 items-center">
+        <button
+          onClick={() => handleStatusChange("")}
+          className={`px-4 py-2 rounded-full font-medium shadow transition ${
+            statusFilter === ""
+              ? "bg-blue-600 text-white shadow-md scale-105"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+        >
+          Todos
+        </button>
+
         <button
           onClick={() => handleStatusChange("active")}
           className={`px-4 py-2 rounded-full font-medium shadow transition ${
@@ -193,9 +208,17 @@ export default function NursesList() {
       ) : error ? (
         <p className="text-red-500 text-center">{error}</p>
       ) : nurses.length === 0 ? (
-        <p className="text-gray-500 text-center">
-          No se encontraron enfermeros para los filtros o búsqueda.
-        </p>
+        <div className="flex flex-col items-center justify-center h-64 text-center text-gray-500">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+            alt="Sin resultados"
+            className="w-20 h-20 mb-4 opacity-70"
+          />
+          <p className="text-lg font-medium">No se encontraron enfermeros.</p>
+          <p className="text-sm text-gray-400">
+            Intenta cambiar los filtros o realizar otra búsqueda.
+          </p>
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
