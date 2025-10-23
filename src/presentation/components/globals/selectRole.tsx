@@ -15,7 +15,6 @@ export function SelectRole({ name, control, error }: SelectRoleProps) {
                 control={control}
                 render={({ field }) => (
                     <select {...field} className="w-full border rounded px-3 py-2">
-                        <option value="ADMINISTRADOR">Administrador</option>
                         <option value="PACIENTE">Paciente</option>
                         <option value="MEDICO">Médico</option>
                         <option value="ENFERMERA">Enfermera</option>
