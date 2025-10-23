@@ -47,6 +47,7 @@ export interface EncounterPayload {
     allergies: any;
     patient: PatientBasic
     encounter: {
+        type: string;
         allergies: any;
         modeTelemedicine: any;
         date_time: string

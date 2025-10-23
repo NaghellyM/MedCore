@@ -1,6 +1,5 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../../../components/ui/tabs"
 import { DashboardLayout } from "../../../../layouts/layout"
-import { NurseSidebar } from "../../../nurse/components/nurseSidebar"
 import type { EncounterPayload } from "../../../../../core/types/medical"
 
 import OrdersSectionView from "./sections/ordersSectionView"
@@ -11,6 +10,7 @@ import PrescriptionsSectionView from "./sections/prescriptionsSectionView"
 import AllergiesSectionView from "./sections/allergiesSectionView"
 import JsonPane from "./parts/JsonPane"
 import Toolbar from "./parts/Toolbar"
+import DoctorSidebar from "../../../doctor/components/doctorSideBar"
 
 type Props = { data: EncounterPayload; onEdit?: () => void; onBack?: () => void }
 
@@ -32,7 +32,7 @@ export default function MedicalHistoryView({ data, onBack }: Props) {
 
     return (
         <DashboardLayout
-            sidebar={<NurseSidebar />}
+            sidebar={<DoctorSidebar />}
             showSearch={false}
             headerHeightClass="pt-[80px]"
             contentMaxWidthClass="max-w-4xl"

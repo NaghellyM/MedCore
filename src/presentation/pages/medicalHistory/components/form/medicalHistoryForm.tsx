@@ -3,7 +3,6 @@ import type { EncounterPayload } from "../../../../../core/types/medical"
 import { useMedicalHistoryForm } from "../../../../hooks/useMedicalHistoryForm"
 
 import { DashboardLayout } from "../../../../layouts/layout"
-import { NurseSidebar } from "../../../nurse/components/nurseSidebar"
 import PatientSection from "./sections/patientSectionForm"
 import EncounterSection from "./sections/encounterSectionForm"
 import VitalsSection from "./sections/vitalsSectionForm"
@@ -12,6 +11,7 @@ import OrdersSection from "./sections/ordersSectionForm"
 import ActionsBar from "./sections/actionsBarForm"
 import DiagnosesSection from "./sections/diagnosesSectionForm"
 import AllergiesSection from "./sections/allergiesSectioncForm"
+import DoctorSidebar from "../../../doctor/components/doctorSideBar"
 
 type Props = { onSubmit: (payload: EncounterPayload) => Promise<void> | void }
 
@@ -43,7 +43,7 @@ export default function MedicalHistoryForm({ onSubmit }: Props) {
 
     return (
         <DashboardLayout
-            sidebar={<NurseSidebar />}
+            sidebar={<DoctorSidebar />}
             showSearch={true}
             headerHeightClass="pt-[80px]"
             contentMaxWidthClass="max-w-4xl"

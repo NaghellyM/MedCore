@@ -8,7 +8,7 @@ export function SidebarBase({ children, }: any) {
                 <div className="mx-2">
                     <SidebarTrigger className="pt-10 pb-4 px-2 flex justify-start" />
                     <SidebarMenuButton className="font-sans " asChild >
-                        <a href="#" className="gap-2 hover:bg-cuidarte-tertiary/10 rounded-md">
+                        <a href="/" className="gap-2 hover:bg-cuidarte-tertiary/10 rounded-md">
                             <LayoutGrid className="mr-2 h-4 w-4" />
                             <span>Inicio</span>
                         </a>

@@ -2,11 +2,9 @@ import App from '../../App';
 import Form from '../pages/login/loginDashboard';
 import NotFoundPage from '../pages/notFoundPage';
 import RootLayout from '../layouts/RootLayout';
-import Page from '../pages/medicalHistory/page';
 import { createBrowserRouter } from 'react-router-dom';
 import { AdminDashboard } from '../pages/admin/adminDashboard';
 import { NurseDashboard } from '../pages/nurse/nurseDashboard';
-import type { EncounterPayload } from '../../core/types/medical';
 import { DoctorDashboard } from '../pages/doctor/doctorDashboard';
 import { PatientDashboard } from '../pages/patient/patientDashboard';
 import { AdminRegisterCSV } from '../pages/admin/pages/admiRegisterCSV';
@@ -15,8 +13,9 @@ import EditEncounterPage from '../pages/encounter/pages/editEncounterPage';
 import EncounterDetailPage from '../pages/encounter/pages/encounterDetailPage';
 import CreateEncounterPage from '../pages/encounter/pages/createEncounterPage';
 import EncounterPreviewPage from '../pages/encounter/pages/encounterPreviewPage';
-import MedicalHistoryForm from '../pages/medicalHistory/components/form/medicalHistoryForm';
-
+import CreateMedicalHistory from '../pages/medicalHistory/pages/createMedicalHistoryPage';
+import { PreviewMedicalHistory } from '../pages/medicalHistory/pages/detailMedicalHistoryPage';
+import MedicalHistory from '../pages/medicalHistory/pages/previewMedicalHistory';
 const router = createBrowserRouter([
     {
         path: '/',
@@ -60,12 +59,17 @@ const router = createBrowserRouter([
             },
             {
                 path: '/medicalHistory',
-                element: <MedicalHistoryForm onSubmit={handleSubmit} />,
+                element: <MedicalHistory/>,
             },
             {
-                path:'/medicalHistory/view',
-                element: <Page />,
+                path: '/medicalHistory/view',
+                element: <PreviewMedicalHistory />,
             },
+            {
+                path: '/medicalHistory/new',
+                element: <CreateMedicalHistory />,
+            }
+            ,
             {
                 path: '/encounter',
                 element: <EncounterPreviewPage />,
@@ -87,7 +91,5 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-function handleSubmit(_payload: EncounterPayload): void | Promise<void> {
-    throw new Error('Function not implemented.');
-}
+
 

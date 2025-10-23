@@ -11,8 +11,8 @@ import {
 
 // Grupo principal (conserva nombres e íconos)
 const gestionClinicaItems = [
-  { title: "Agenda", url: "#", icon: Calendar },
-  { title: "Pacientes", url: "#", icon: User },
+  { title: "Agenda", url: "/encounter", icon: Calendar },
+  { title: "Pacientes", url: "/medicalHistory", icon: User },
   { title: "Telemedicina", url: "#", icon: Video },
   { title: "Medicamentos", url: "#", icon: Activity },
   { title: "Derivaciones", url: "#", icon: ArrowRight },
