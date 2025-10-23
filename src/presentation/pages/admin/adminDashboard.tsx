@@ -50,31 +50,19 @@ export function AdminDashboard() {
   ];
 
   return (
-    <>
-      <UserHeader showSearch={false} />
+      <DashboardLayout
+            sidebar={<AdminSidebar />}
+            showSearch={true}
+            headerHeightClass="pt-[80px]"
+            contentMaxWidthClass="max-w-7xl"
+            variant="inset"
+            collapsible="offcanvas"
+            mainClassName="pb-10 "
+            sidebarClassName=""
+            sidebarContentClassName=""
+        >
 
-      <SidebarProvider>
-        <div className="flex pt-[80px] min-h-screen bg-gradient-to-br from-gray-50 to-white">
-          {/* Botón móvil */}
-          <div className="md:hidden absolute top-4 left-4 z-20">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-3 rounded-lg bg-white shadow hover:bg-gray-100"
-              aria-label="Abrir menú lateral"
-            >
-              <span className="text-2xl">☰</span>
-            </button>
-          </div>
-
-          {/* Sidebar */}
-          <div
-            className={`${sidebarOpen ? "block" : "hidden"} md:block md:w-64 shrink-0`}
-          >
-            <AdminSidebar />
-          </div>
-
-          {/* Contenido principal */}
-          <main className="flex-1 flex justify-center items-start p-6 md:p-10">
+            <main className="flex-1 flex justify-center items-start p-6 md:p-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 max-w-6xl w-full">
               {sections.map((section) => (
                 <button
@@ -99,7 +87,6 @@ export function AdminDashboard() {
             </div>
           </main>
         </div>
-      </SidebarProvider>
-    </>
+    
+   </DashboardLayout>
   );
-}

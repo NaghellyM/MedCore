@@ -51,14 +51,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const loginUser = async (credentials: any) => {
         try {
             const response = await login(credentials.email, credentials.password);
+            console.log("Login service response:", response);
+            
+            const currentUser = getCurrentUser();
+            console.log("Current user after login:", currentUser);
+            
             setAuthState({
                 isAuthenticated: true,
-                user: getCurrentUser(),
+                user: currentUser,
                 loading: false,
                 error: null,
             });
             return response;
         } catch (error) {
+            console.error("Login error:", error);
             setAuthState({
                 isAuthenticated: false,
                 user: null,
