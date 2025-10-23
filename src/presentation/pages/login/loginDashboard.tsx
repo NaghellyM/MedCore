@@ -41,9 +41,24 @@ const Form: React.FC = () => {
     navigate(dest, { replace: true });
   };
 
+  const mapRoleToEnglish = (role: string): Role => {
+    const roleMap: Record<string, Role> = {
+      'ADMINISTRADOR': 'admin',
+      'ADMIN': 'admin',
+      'MEDICO': 'doctor',
+      'DOCTOR': 'doctor',
+      'ENFERMERO': 'nurse',
+      'NURSE': 'nurse',
+      'PACIENTE': 'patient',
+      'PATIENT': 'patient',
+    };
+    return roleMap[role.toUpperCase()] || 'patient';
+  };
+
   const onSubmit = async (data: IFormInput) => {
     try {
       const res: any = await loginUser({ email: data.email, password: data.password });
+      console.log("Login response:", res);
 
       if (res?.message && String(res.message).toLowerCase().includes("email")) {
         setEmail(data.email);
@@ -53,11 +68,15 @@ const Form: React.FC = () => {
 
       const redirect = params.get('redirect');
       if (redirect && redirect !== '/login') {
+        console.log("Redirecting to:", redirect);
         navigate(redirect, { replace: true });
         return;
       }
 
-      const role: Role | undefined = res?.user?.role;
+      // Obtener el rol del usuario desde localStorage (ya guardado por authService)
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const role: Role = mapRoleToEnglish(user?.role || '');
+      console.log("User role:", role, "from:", user?.role);
       goToRoleHome(role);
     } catch (err: any) {
       const errorMessage = err?.message || err?.toString() || "Error al iniciar sesión";
