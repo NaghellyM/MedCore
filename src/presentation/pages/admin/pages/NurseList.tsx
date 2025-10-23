@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NurseCard } from "../../nurse/components/NurseCard"
+import { NurseCard } from "../../nurse/components/nurseCard"
 import { nursesService } from "../../../../core/services/nursesService"
 import { Search, ArrowLeftCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
@@ -53,11 +53,11 @@ export default function NursesList() {
 
       let response: any
       if (debouncedSearch.trim()) {
-        response = await nursesService.searchByNameOrId(debouncedSearch, currentPage, itemsPerPage)
+        response = await nursesService.searchByNameOrId(debouncedSearch)
       } else if (statusFilter) {
-        response = await nursesService.filterByStatus(statusFilter, currentPage, itemsPerPage)
+        response = await nursesService.filterByStatus(statusFilter)
       } else {
-        response = await nursesService.getAll(currentPage, itemsPerPage)
+        response = await nursesService.getAll(currentPage)
       }
 
       console.log("🩺 Respuesta del backend (nurses):", response)

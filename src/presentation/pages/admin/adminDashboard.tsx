@@ -66,7 +66,7 @@ export function AdminDashboard() {
                 <button
                   key={section.title}
                   onClick={section.action}
-                  className={relative group bg-gradient-to-b ${section.color} rounded-2xl p-8 text-left shadow-lg transition-all duration-300 ${section.hover} hover:scale-105}
+                  className={`relative group bg-gradient-to-b ${section.color} rounded-2xl p-8 text-left shadow-lg transition-all duration-300 ${section.hover} hover:scale-105`}
                 >
                   <div className="flex flex-col items-center text-center space-y-4">
                     <div className="bg-white p-4 rounded-full shadow-inner">
