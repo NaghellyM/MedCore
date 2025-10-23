@@ -1,17 +1,15 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // 👈 Importa el hook
 import { AdminSidebar } from "./components/adminSidebar";
-import { SidebarProvider } from "../../components/ui/sidebar";
-import UserHeader from "../../components/globals/header";
+
 import {
   Stethoscope,
   UserPlus,
   Upload,
   HeartPulse,
 } from "lucide-react";
+import { DashboardLayout } from "../../layouts/layout";
 
 export function AdminDashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate(); // 👈 Inicializa el hook
 
   const sections = [
@@ -86,7 +84,6 @@ export function AdminDashboard() {
               ))}
             </div>
           </main>
-        </div>
-    
-   </DashboardLayout>
+        </DashboardLayout>
   );
+}
