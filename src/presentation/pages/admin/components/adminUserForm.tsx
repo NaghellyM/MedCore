@@ -1,13 +1,13 @@
-import { Controller } from "react-hook-form";
-import { motion } from "framer-motion";
+import { Controller } from "react-hook-form"
+import { motion } from "framer-motion"
 
 interface Props {
-  control: any;
-  onSubmit: any;
-  errors: any;
-  loading: boolean;
-  specialties: { id: string; name: string }[];
-  selectedRole: string;
+  control: any
+  onSubmit: any
+  errors: any
+  loading: boolean
+  specialties: { id: string; name: string }[]
+  selectedRole: string
 }
 
 export function UserForm({
@@ -20,6 +20,52 @@ export function UserForm({
 }: Props) {
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-4 text-left">
+      {/* Nombre completo */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Nombre completo
+        </label>
+        <Controller
+          name="fullname"
+          control={control}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              placeholder="Ej: Dr. Juan Pérez"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          )}
+        />
+        {errors.fullname && (
+          <p className="text-red-500 text-sm mt-1">{errors.fullname.message}</p>
+        )}
+      </div>
+
+      {/* Identificación */}
+<div>
+  <label className="block text-sm font-medium text-gray-700">
+    Identificación
+  </label>
+  <Controller
+    name="identificacion"
+    control={control}
+    render={({ field }) => (
+      <input
+        {...field}
+        type="text"
+        placeholder="Ej: 1002389234"
+        className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+    )}
+  />
+  {errors.identificacion && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.identificacion.message}
+    </p>
+  )}
+</div>
+ 
       {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -42,7 +88,9 @@ export function UserForm({
 
       {/* Contraseña */}
       <div>
-        <label className="block text-sm font-medium text-gray-700">Contraseña</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Contraseña
+        </label>
         <Controller
           name="current_password"
           control={control}
@@ -155,5 +203,5 @@ export function UserForm({
         {loading ? "Registrando..." : "Registrar"}
       </motion.button>
     </form>
-  );
+  )
 }
