@@ -7,6 +7,7 @@ interface Props {
   errors: any
   loading: boolean
   specialties: { id: string; name: string }[]
+  departments: string[]
   selectedRole: string
 }
 
@@ -16,6 +17,7 @@ export function UserForm({
   errors,
   loading,
   specialties,
+  departments,
   selectedRole,
 }: Props) {
   return (
@@ -43,29 +45,29 @@ export function UserForm({
       </div>
 
       {/* Identificación */}
-<div>
-  <label className="block text-sm font-medium text-gray-700">
-    Identificación
-  </label>
-  <Controller
-    name="identificacion"
-    control={control}
-    render={({ field }) => (
-      <input
-        {...field}
-        type="text"
-        placeholder="Ej: 1002389234"
-        className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
-    )}
-  />
-  {errors.identificacion && (
-    <p className="text-red-500 text-sm mt-1">
-      {errors.identificacion.message}
-    </p>
-  )}
-</div>
- 
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Identificación
+        </label>
+        <Controller
+          name="identificacion"
+          control={control}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              placeholder="Ej: 1002389234"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          )}
+        />
+        {errors.identificacion && (
+          <p className="text-red-500 text-sm mt-1">
+            {errors.identificacion.message}
+          </p>
+        )}
+      </div>
+
       {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-700">Email</label>
@@ -147,13 +149,12 @@ export function UserForm({
               <option value="PACIENTE">Paciente</option>
               <option value="MEDICO">Médico</option>
               <option value="ENFERMERA">Enfermera</option>
-              <option value="ADMINISTRADOR">Administrador</option>
             </select>
           )}
         />
       </div>
 
-      {/* Especialidad (solo si es médico) */}
+      {/* Campo dinámico para médicos */}
       {selectedRole === "MEDICO" && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
@@ -161,28 +162,63 @@ export function UserForm({
           transition={{ duration: 0.3 }}
         >
           <label className="block text-sm font-medium text-gray-700">
-            Especialidad
+            Especialización
           </label>
           <Controller
-            name="specialization"
+            name="especializacion"
             control={control}
             render={({ field }) => (
               <select
                 {...field}
                 className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
-                <option value="">Selecciona una especialidad</option>
+                <option value="">Selecciona una especialización</option>
                 {specialties.map((sp) => (
-                  <option key={sp.id} value={sp.id}>
+                  <option key={sp.id} value={sp.name}>
                     {sp.name}
                   </option>
                 ))}
               </select>
             )}
           />
-          {errors.specialization && (
+          {errors.especializacion && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.specialization.message}
+              {errors.especializacion.message}
+            </p>
+          )}
+        </motion.div>
+      )}
+
+      {/* Campo dinámico para enfermeras */}
+      {selectedRole === "ENFERMERA" && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <label className="block text-sm font-medium text-gray-700">
+            Departamento
+          </label>
+          <Controller
+            name="departamento"
+            control={control}
+            render={({ field }) => (
+              <select
+                {...field}
+                className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="">Selecciona un departamento</option>
+                {departments.map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
+                ))}
+              </select>
+            )}
+          />
+          {errors.departamento && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.departamento.message}
             </p>
           )}
         </motion.div>

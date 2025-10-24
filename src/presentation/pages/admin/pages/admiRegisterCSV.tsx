@@ -166,7 +166,7 @@ export function AdminRegisterCSV() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-white p-6 flex flex-col items-center">
       {/* Botón Volver */}
       <div className="w-full max-w-4xl mb-6 flex justify-start">
         <button

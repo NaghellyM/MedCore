@@ -5,7 +5,7 @@ export interface RegisterUserDto {
     current_password: string
     status?: string
     specialization?: string
-    department?: string
+    departamento?: string
     license_number?: string
     phone?: string
     identificacion: string

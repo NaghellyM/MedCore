@@ -8,17 +8,21 @@ import { registerUser } from "../../../../core/services/patientService"
 import { doctorsService } from "../../../../core/services/doctorsService"
 import type { RegisterUserDto } from "../../../../core/models/user"
 import { validationSchema } from "../../../../core/validators/validationSchema"
-import { UserPlus } from "lucide-react"
+import { UserPlus, ArrowLeft } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 export function AdminRegisterUser() {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [specialties, setSpecialties] = useState<{ id: string; name: string }[]>([])
+  const [departments, setDepartments] = useState<string[]>([])
 
   const {
     control,
     handleSubmit,
     watch,
     reset,
+    setError,
     formState: { errors },
   } = useForm<RegisterUserDto>({
     resolver: yupResolver(validationSchema),
@@ -38,24 +42,29 @@ export function AdminRegisterUser() {
     const loadSpecialties = async () => {
       try {
         const response = await doctorsService.getSpecialties()
-        console.log("📋 Especialidades recibidas:", response)
-
-        // ✅ Ahora la respuesta ya es un array directamente
         if (Array.isArray(response)) {
           const mapped = response.map((esp: any) => ({
             id: esp.id,
-            name: `${esp.nombre} (${esp.departamento?.nombre || "Sin departamento"})`,
+            name: esp.nombre,
           }))
           setSpecialties(mapped)
-        } else {
-          console.warn("⚠️ Formato inesperado en la respuesta:", response)
         }
       } catch (error) {
         console.error("❌ Error al cargar especialidades:", error)
       }
     }
 
+    const loadDepartments = async () => {
+      try {
+        const list = ["Urgencias", "Pediatría", "UCI", "Oncología", "Farmacia"]
+        setDepartments(list)
+      } catch (error) {
+        console.error("❌ Error al cargar departamentos:", error)
+      }
+    }
+
     loadSpecialties()
+    loadDepartments()
   }, [])
 
   const onSubmit = async (data: RegisterUserDto) => {
@@ -73,27 +82,50 @@ export function AdminRegisterUser() {
       reset()
     } catch (error: any) {
       console.error("❌ Error al registrar usuario:", error)
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.message || "No se pudo registrar el usuario",
-      })
+      if (error.response?.data?.errors) {
+        const backendErrors = error.response.data.errors
+        for (const [field, message] of Object.entries(backendErrors)) {
+          setError(field as keyof RegisterUserDto, {
+            type: "server",
+            message: message as string,
+          })
+        }
+      } else if (error.response?.data?.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: error.response.data.message,
+        })
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un error inesperado. Intenta nuevamente.",
+        })
+      }
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6">
+      {/* 🔙 Botón con fondo azul */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => navigate("/adminpage")}
+        className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-xl shadow hover:bg-blue-700 transition-all duration-300 mb-8"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        <span>Volver al panel de administración</span>
+      </motion.button>
+
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        whileHover={{
-          scale: 1.02,
-          boxShadow: "0 0 30px rgba(0, 0, 0, 0.1)",
-        }}
         transition={{ duration: 0.5 }}
-        className="bg-white/80 backdrop-blur-sm border border-gray-100 p-8 rounded-2xl shadow-md w-full max-w-md transition-all"
+        className="bg-white border border-gray-200 p-8 rounded-2xl shadow-xl w-full max-w-md"
       >
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -104,8 +136,8 @@ export function AdminRegisterUser() {
           <motion.div
             initial={{ rotate: -20, scale: 0 }}
             animate={{ rotate: 0, scale: 1 }}
-            transition={{ duration: 0.5, type: "spring" }}
-            className="bg-blue-100 p-3 rounded-full mb-2"
+            transition={{ duration: 0.6, type: "spring" }}
+            className="bg-blue-100 p-3 rounded-full mb-3"
           >
             <UserPlus className="text-blue-600 w-8 h-8" />
           </motion.div>
@@ -113,9 +145,12 @@ export function AdminRegisterUser() {
           <h2 className="text-3xl font-semibold text-gray-800 text-center">
             Registrar Usuario
           </h2>
+          <p className="text-gray-500 text-sm mt-1 text-center">
+            Completa los datos para agregar un nuevo usuario
+          </p>
         </motion.div>
 
-        {/* 🔧 Formulario interno */}
+        {/* 🔧 Formulario */}
         <UserForm
           control={control}
           onSubmit={handleSubmit(onSubmit)}
@@ -123,6 +158,7 @@ export function AdminRegisterUser() {
           loading={loading}
           specialties={specialties}
           selectedRole={selectedRole}
+          departments={departments}
         />
       </motion.div>
     </div>
