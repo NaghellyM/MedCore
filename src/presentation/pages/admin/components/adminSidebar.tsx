@@ -3,10 +3,12 @@ import { SidebarGroupComponent } from "../../../components/globals/sidebar/Sideb
 import { UsersRound, Upload, Shield, HeartPulse, LayoutGrid, Activity, KeySquare, ClockFading, Boxes, Bell } from "lucide-react";
 
 const items = [
-    { title: "Registro de usuarios", url: "#", icon: UsersRound },
-    { title: "Carga Masiva de Usuarios", url: "#", icon: Upload },
-    { title: "Gestión de pacientes", url: "/medicalHistory", icon: HeartPulse },
-    { title: "Gestión de médicos", url: "/encounter", icon: UsersRound },
+    { title: "Registro de usuarios", url: "/admin/registerUser", icon: UsersRound },
+    { title: "Carga Masiva de Usuarios", url: "/admin/registerCSV", icon: Upload },
+    { title: "Gestión de pacientes", url: "/admin/patients", icon: HeartPulse },
+    { title: "Gestión de médicos", url: "/admin/doctors", icon: UsersRound },
+    { title: "Lista de enfermeros", url: "/admin/nursesList", icon: UsersRound },
+    { title: "Lista de médicos", url: "/admin/doctorsList", icon: UsersRound },
 ];
 
 const securityItems = [

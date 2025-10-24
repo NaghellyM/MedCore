@@ -12,3 +12,21 @@ export async function verifyEmail(email: string, code: string): Promise<LoginRes
   const data = { email, verificationCode: code };
   return apiPost<LoginResponse>(url, data);
 }
+
+export interface ResendVerificationResponse {
+  message: string;
+}
+
+
+export async function requestVerificationCode(
+  email: string
+): Promise<ResendVerificationResponse> {
+  const url = `${ApiUrls.msSecurity}/auth/resend-verification`;
+  const normalizedEmail = email.trim().toLowerCase();
+
+  if (!normalizedEmail) {
+    throw new Error("El correo es requerido.");
+  }
+
+  return apiPost<ResendVerificationResponse>(url, { email: normalizedEmail });
+}

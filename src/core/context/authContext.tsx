@@ -9,6 +9,7 @@ interface AuthContextType {
     error: string | null;
     loginUser: (credentials: any) => Promise<any>;
     logoutUser: () => void;
+    refreshUser: () => Promise<any>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,10 +53,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
             const response = await login(credentials.email, credentials.password);
             console.log("Login service response:", response);
-            
+
             const currentUser = getCurrentUser();
             console.log("Current user after login:", currentUser);
-            
+
             setAuthState({
                 isAuthenticated: true,
                 user: currentUser,
@@ -85,6 +86,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         // Navigation will be handled by the component that calls logoutUser
         window.location.href = "/";
     };
+    const refreshUser = async () => {
+        try {
+            const currentUser = getCurrentUser(); // re-lee del storage/token
+            setAuthState((prev: any) => ({
+                ...prev,
+                isAuthenticated: !!currentUser,
+                user: currentUser,
+                // mantenemos loading y error tal cual estaban
+            }));
+            return currentUser;
+        } catch (error) {
+            // no alteramos otras funciones; solo normalizamos estado si algo falla
+            setAuthState((prev: any) => ({
+                ...prev,
+                isAuthenticated: false,
+                user: null,
+                error: prev?.error ?? null,
+            }));
+            throw error;
+        }
+    };
 
 
     return (
@@ -93,6 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
                 ...authState,
                 loginUser,
                 logoutUser,
+                refreshUser,
             }}
         >
             {children}

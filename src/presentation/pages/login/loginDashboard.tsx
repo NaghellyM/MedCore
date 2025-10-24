@@ -1,3 +1,4 @@
+// src/features/auth/pages/Form.tsx
 import Swal from 'sweetalert2';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -11,7 +12,6 @@ import type { IFormInput } from '../../../core/types/types';
 
 import FormInput from '../../components/globals/input';
 import FormButton from '../../components/globals/button';
-import LoginVerification from './components/loginVerification';
 
 type Role = 'admin' | 'doctor' | 'nurse' | 'patient';
 
@@ -23,10 +23,6 @@ const Form: React.FC = () => {
 
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(v => !v);
-
-  const [email, setEmail] = useState<string>("");
-  const [code, setCode] = useState<string>("");
-  const [needsVerification, setNeedsVerification] = useState<boolean>(false);
 
   const { loginUser } = useAuth();
   const navigate = useNavigate();
@@ -60,9 +56,13 @@ const Form: React.FC = () => {
       const res: any = await loginUser({ email: data.email, password: data.password });
       console.log("Login response:", res);
 
+      // Señal del backend: requiere verificación de correo
       if (res?.message && String(res.message).toLowerCase().includes("email")) {
-        setEmail(data.email);
-        setNeedsVerification(true);
+        // redirige a la vista de verificación con el email
+        navigate(`/verify?email=${encodeURIComponent(data.email)}`, {
+          replace: true,
+          state: { email: data.email },
+        });
         return;
       }
 
@@ -78,26 +78,20 @@ const Form: React.FC = () => {
       const role: Role = mapRoleToEnglish(user?.role || '');
       console.log("User role:", role, "from:", user?.role);
       goToRoleHome(role);
+
     } catch (err: any) {
-      const errorMessage = err?.message || err?.toString() || "Error al iniciar sesión";
+      const errorMessage = err?.message || String(err) || "Error al iniciar sesión";
       Swal.fire({ icon: 'warning', title: '', text: errorMessage });
     }
   };
 
   return (
-    <div className=" grid grid-cols-1 md:grid-cols-2 min-h-screen  items-center justify-center px-4 sm:px-6 lg:px-8">
-      <img
-        src="/logoCuidarte.png"
-        alt="logo-cuidarte"
-        className="w-30 h-30 "
-      />
-
+    <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
+      <img src="/logoCuidarte.png" alt="logo-cuidarte" className="w-30 h-30" />
       <div className="w-full max-w-[22rem] sm:max-w-md md:max-w-lg lg:max-w-xl">
         <h1 className="text-center font-bold text-2xl sm:text-3xl lg:text-4xl tracking-tight text-gray-900">
           Bienvenidos a Cuidarte
         </h1>
-
-
 
         <div className="mt-6 sm:mt-8 bg-white p-5 sm:p-7 lg:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
@@ -136,12 +130,6 @@ const Form: React.FC = () => {
               Regresar
             </button>
           </form>
-
-          {needsVerification && (
-            <div className="mt-6 sm:mt-8">
-              <LoginVerification email={email} code={code} setCode={setCode} />
-            </div>
-          )}
         </div>
       </div>
     </div>
