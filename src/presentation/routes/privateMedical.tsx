@@ -11,7 +11,7 @@ import CreateEncounterPage from "../pages/encounter/pages/createEncounterPage";
 import EncounterPreviewPage from "../pages/encounter/pages/encounterPreviewPage";
 
 export const medicalRoutes: RouteObject = {
-    element: <RoleRoute allow={["admin", "doctor", "nurse"]} />,
+    element: <RoleRoute allow={["admin", "doctor"]} />,
 
     children: [
         {

@@ -11,13 +11,6 @@ import CreateMedicalHistory from "../pages/medicalHistory/pages/createMedicalHis
 export const commonPrivateRoutes: RouteObject = {
     element: <RootLayout />,
     children: [
-        { path: "encounter", element: <EncounterPreviewPage /> },
-        { path: "encounter/new", element: <CreateEncounterPage /> },
-        { path: "encounter/edit/:id", element: <EditEncounterPage /> },
-        { path: "encounter/:id", element: <EncounterDetailPage /> },
-
-        { path: "medicalHistory", element: <MedicalHistory /> },
-        { path: "medicalHistory/view", element: <PreviewMedicalHistory /> },
-        { path: "medicalHistory/new", element: <CreateMedicalHistory /> },
+      
     ],
 };

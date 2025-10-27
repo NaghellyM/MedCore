@@ -114,13 +114,6 @@ const VerificationPage: React.FC = () => {
 
                 <div className="mt-6 space-y-3">
                     <FormButton type="button" label="Verificar código" onClick={onVerify} />
-                    <button
-                        type="button"
-                        onClick={onSkipVerify}
-                        className="w-full bg-gray-100 text-gray-800 py-2 font-semibold rounded-md"
-                    >
-                        Verificar después
-                    </button>
                 </div>
             </div>
         </div>

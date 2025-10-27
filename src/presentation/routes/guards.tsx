@@ -18,7 +18,16 @@ const mapRoleToEnglish = (role: string): Role => {
     return roleMap[role?.toUpperCase()] || 'patient';
 };
 
+// Temporal: desactivar guards durante desarrollo / pruebas.
+// Cambia esta constante a `false` para volver a activar la protección.
+const DISABLE_GUARDS = true;
+
 export function ProtectedRoute() {
+    if (DISABLE_GUARDS) {
+        console.log("Guards desactivados: ProtectedRoute permite acceso a todos");
+        return <Outlet />;
+    }
+
     const { loading, isAuthenticated } = useAuth();
     const loc = useLocation();
     if (loading) return <div className="p-6">Verificando sesión…</div>;
@@ -31,6 +40,11 @@ export function ProtectedRoute() {
 }
 
 export function RoleRoute({ allow }: { allow: Role[] }) {
+    if (DISABLE_GUARDS) {
+        console.log("Guards desactivados: RoleRoute permite acceso a todos");
+        return <Outlet />;
+    }
+
     const { loading, isAuthenticated, user } = useAuth();
     const loc = useLocation();
 
