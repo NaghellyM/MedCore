@@ -24,7 +24,6 @@ const DISABLE_GUARDS = true;
 
 export function ProtectedRoute() {
     if (DISABLE_GUARDS) {
-        console.log("Guards desactivados: ProtectedRoute permite acceso a todos");
         return <Outlet />;
     }
 
@@ -33,7 +32,6 @@ export function ProtectedRoute() {
     if (loading) return <div className="p-6">Verificando sesión…</div>;
     if (!isAuthenticated) {
         const to = `/login?redirect=${encodeURIComponent(loc.pathname + loc.search)}`;
-        console.log(`Usuario no autenticado. Redirigiendo a ${to}`);
         return <Navigate to={to} replace />;
     }
     return <Outlet />;
@@ -41,7 +39,6 @@ export function ProtectedRoute() {
 
 export function RoleRoute({ allow }: { allow: Role[] }) {
     if (DISABLE_GUARDS) {
-        console.log("Guards desactivados: RoleRoute permite acceso a todos");
         return <Outlet />;
     }
 
@@ -52,10 +49,7 @@ export function RoleRoute({ allow }: { allow: Role[] }) {
     if (!isAuthenticated) return <Navigate to="/login" replace />;
 
     const rawRole = (user?.role ?? user?.rol ?? user?.userRole) as string | undefined;
-    console.log("RoleRoute - User role from context:", rawRole);
     const role: Role = rawRole ? mapRoleToEnglish(rawRole) : 'patient';
-
-    console.log("RoleRoute - Raw role:", rawRole, "Mapped role:", role, "Allowed:", allow);
 
     if (!role || !allow.includes(role)) {
         if (role === "admin") {
@@ -70,7 +64,6 @@ export function RoleRoute({ allow }: { allow: Role[] }) {
         if (role === "patient") {
             return <Navigate to="/patientPage" replace />;
         }
-        // Si no tiene rol definido, redirigir a home
         return (
             <Navigate
                 to="/"
@@ -80,6 +73,5 @@ export function RoleRoute({ allow }: { allow: Role[] }) {
         );
     }
 
-    // Si el rol está permitido, mostrar el contenido
     return <Outlet />;
 }

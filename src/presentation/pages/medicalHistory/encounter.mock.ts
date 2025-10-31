@@ -35,7 +35,8 @@ export const mockEncounter: EncounterPayload = {
             { type: "interconsulta", description: "Cardiología", status: "en_proceso" },
         ],
         allergies: undefined,
-        modeTelemedicine: undefined
+        modeTelemedicine: undefined,
+        type: ""
     },
     allergies: [{ substance: "Penicilina", reaction: "Urticaria", severity: "moderada" }],
     audit: { created_at: "2025-10-20T10:35:00" },

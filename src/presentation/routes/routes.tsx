@@ -5,7 +5,6 @@ import { adminRoutes } from "./privateAdmin";
 import { doctorRoutes } from "./privateDoctor";
 import { nurseRoutes } from "./privateNurse";
 import { patientRoutes } from "./privatePatient";
-import { commonPrivateRoutes } from "./privateCommon";
 import { medicalRoutes } from "./privateMedical";
 
 const router = createBrowserRouter([
@@ -14,7 +13,6 @@ const router = createBrowserRouter([
     {
         element: <ProtectedRoute />, 
         children: [
-            commonPrivateRoutes,      
             adminRoutes,
             doctorRoutes,
             nurseRoutes,
